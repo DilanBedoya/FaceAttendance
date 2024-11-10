@@ -266,7 +266,13 @@ export default function Cursos() {
             });
         }
     }
+    //Funcionalidad para filtrar
+    const [filter, setFilter] = useState(''); // Estado para el filtro de nombre
+    // Filtra los estudiantes por el nombre ingresado
+    const filteredCourses = cursos.filter(curso =>
+        curso.materia.toLowerCase().includes(filter.toLowerCase())
 
+    );
 
     return (
         <>
@@ -275,7 +281,7 @@ export default function Cursos() {
             </div>
             <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'justify', lineHeight: '1.6' }}>
                 En este módulo podrás visualizar, agregar, actualizar y eliminar los cursos disponibles,
-                gestionar los cursos de manera eficiente es clave para 
+                gestionar los cursos de manera eficiente es clave para
                 ofrecer una experiencia educativa organizada y sin contratiempos.
 
             </h6>
@@ -283,55 +289,65 @@ export default function Cursos() {
                 <Button variant="dark" className='mb-4' onClick={handleShow}>
                     Crear Curso
                 </Button>
-                <Table striped bordered hover responsive="sm" style={{ textAlign: 'center' }}>
-                    <thead className="table-dark ">
-                        <tr>
-                            <th>#</th>
-                            <th>Materia</th>
-                            <th>Código</th>
-                            <th>Paralelo</th>
-                            <th>Semestre</th>
-                            <th style={{ textAlign: "center" }}>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {cursos.length > 0 ? (
-                            cursos.map((curso, index) => (
-                                <tr key={curso.id || index}>
-                                    <td>{index + 1}</td>
-                                    <td>{curso.materia}</td>
-                                    <td>{curso.codigo}</td>
-                                    <td>{curso.paralelo}</td>
-                                    <td>{curso.semestre}</td>
-                                    <td style={{ textAlign: "center" }}>
-                                        <Button
-                                            variant="link"
-                                            onClick={() => {
-                                                visualizarCurso(curso._id)
+                <div>
+                    {/* Input para filtrar por materia */}
+                    <Form.Group controlId="filterCourse">
+                        <Form.Control
+                            type="text"
+                            placeholder="Escribe la materia para buscar el curso"
+                            value={filter}
+                            onChange={(e) => setFilter(e.target.value)}
+                        />
+                    </Form.Group>
 
-                                            }}
-                                            style={{ padding: 0, color: 'inherit', marginRight: '10px' }}
-                                        >
-                                            <GrUpdate />
-                                        </Button>
-                                        <Button
-                                            variant="link"
-                                            onClick={() => eliminarCurso(curso._id)}
-                                            title="Eliminar curso"
-                                            style={{ padding: 0, color: 'inherit' }}
-                                        >
-                                            <RiDeleteBin2Fill />
-                                        </Button>
-                                    </td>
-                                </tr>
-                            ))
-                        ) : (
+                    {/* Tabla con la información de los cursos */}
+                    <Table striped bordered hover responsive="sm" style={{ textAlign: 'center' }}>
+                        <thead className="table-dark">
                             <tr>
-                                <td colSpan="6" style={{ textAlign: 'center' }}>No hay cursos disponibles</td>
+                                <th>#</th>
+                                <th>Materia</th>
+                                <th>Código</th>
+                                <th>Paralelo</th>
+                                <th>Semestre</th>
+                                <th style={{ textAlign: "center" }}>Acciones</th>
                             </tr>
-                        )}
-                    </tbody>
-                </Table>
+                        </thead>
+                        <tbody>
+                            {filteredCourses.length > 0 ? (
+                                filteredCourses.map((curso, index) => (
+                                    <tr key={curso.id || index}>
+                                        <td>{index + 1}</td>
+                                        <td>{curso.materia}</td>
+                                        <td>{curso.codigo}</td>
+                                        <td>{curso.paralelo}</td>
+                                        <td>{curso.semestre}</td>
+                                        <td style={{ textAlign: "center" }}>
+                                            <Button
+                                                variant="link"
+                                                onClick={() => visualizarCurso(curso._id)}
+                                                style={{ padding: 0, color: 'inherit', marginRight: '10px' }}
+                                            >
+                                                <GrUpdate />
+                                            </Button>
+                                            <Button
+                                                variant="link"
+                                                onClick={() => eliminarCurso(curso._id)}
+                                                title="Eliminar curso"
+                                                style={{ padding: 0, color: 'inherit' }}
+                                            >
+                                                <RiDeleteBin2Fill />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="6" style={{ textAlign: 'center' }}>No se encontraron cursos</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </Table>
+                </div>
             </Container>
 
             {/* Modal para crear curso */}

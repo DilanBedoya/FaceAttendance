@@ -65,7 +65,7 @@ export default function Dashboard() {
                         <Navbar.Text className="ms-auto me-2">
                             <span className="bg-success rounded-circle" style={{ width: '10px', height: '10px', display: 'inline-block' }}></span>
 
-                            Docente - {user?.nombre}
+                            Docente - {user?.nombre + " " + user?.apellido}
 
                         </Navbar.Text>
                         <Navbar.Brand>

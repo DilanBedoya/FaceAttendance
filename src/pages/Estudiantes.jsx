@@ -18,6 +18,8 @@ export default function Estudiantes() {
     const [selectedCourse, setSelectedCourse] = useState(null); // Estado para almacenar el curso seleccionado
     const [students, setStudents] = useState([]); // Estado para almacenar los estudiantes del curso seleccionado
 
+
+
     // Función para listar cursos
     const listarCursos = async () => {
         try {
@@ -56,6 +58,7 @@ export default function Estudiantes() {
             // Hacer la petición POST al backend para obtener los estudiantes
             const response = await axios.post(url, data, { headers });
             setStudents(response.data); // Guardar los estudiantes en el estado
+            console.log(response.data);
         } catch (error) {
             console.log(error);
         }
@@ -205,10 +208,19 @@ export default function Estudiantes() {
         }
     }
 
-
+    //Funcionalidad para filtrar
+    const [filter, setFilter] = useState(''); // Estado para el filtro de nombre
+    // Filtra los estudiantes por el nombre ingresado
+    const filteredStudents = students.filter(estudiante =>
+        estudiante.nombre.toLowerCase().includes(filter.toLowerCase()) ||
+        estudiante.apellido.toLowerCase().includes(filter.toLowerCase())
+    );
 
     return (
         <Container>
+
+
+
             <div>
                 <h1 style={{ textAlign: 'center' }}>Gestionar Estudiantes</h1>
             </div>
@@ -244,73 +256,81 @@ export default function Estudiantes() {
                 </Col>
 
                 {/* Tabla con la información de los estudiantes */}
-                <Table striped bordered hover responsive="sm">
-                    <thead className="table-dark">
-                        <tr>
-                            <th>#</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>Cédula</th>
-                            <th>Dirección</th>
-                            <th>Ciudad</th>
-                            <th>Teléfono</th>
-                            <th style={{ textAlign: "center" }}>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {selectedCourse ? (
-                            students.length > 0 ? (
-                                students.map((estudiante, index) => (
-                                    <tr key={estudiante._id}>
-                                        <td>{index + 1}</td>
-                                        <td>{estudiante.nombre}</td>
-                                        <td>{estudiante.apellido}</td>
-                                        <td>{estudiante.cedula}</td>
-                                        <td>{estudiante.direccion}</td>
-                                        <td>{estudiante.ciudad}</td>
-                                        <td>{estudiante.telefono}</td>
-                                        <td style={{ textAlign: "center" }}>
-                                            <Button
-                                                variant="link"
-                                                onClick={() => {
-                                                    visualizarEstudiante(estudiante._id)
+                <div>
+                    {/* Input para filtrar por nombre */}
+                    <Form.Group controlId="filterName" style={{ textAlign: 'left' }}>
+                        
+                        <Form.Control
+                            type="text"
+                            placeholder="Escribe un nombre para buscar el estudiante"
+                            value={filter}
+                            onChange={(e) => setFilter(e.target.value)} // Actualiza el valor del filtro
+                        />
+                    </Form.Group>
 
-                                                }}
-                                                style={{ padding: 0, color: 'inherit', marginRight: '10px' }}
-                                            >
-                                                <GrUpdate />
-                                            </Button>
-                                            <Button
-                                                variant="link"
-                                                onClick={() =>
-                                                    eliminarEstudiante(estudiante._id)
-                                                }
-                                                title="Eliminar curso"
-                                                style={{ padding: 0, color: 'inherit' }}
-                                            >
-                                                <RiDeleteBin2Fill />
-                                            </Button>
-                                        </td>
+
+                    <Table striped bordered hover responsive="sm">
+                        <thead className="table-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Cédula</th>
+                                <th>Dirección</th>
+                                <th>Ciudad</th>
+                                <th>Teléfono</th>
+                                <th style={{ textAlign: "center" }}>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {selectedCourse ? (
+                                filteredStudents.length > 0 ? (
+                                    filteredStudents.map((estudiante, index) => (
+                                        <tr key={estudiante._id}>
+                                            <td>{index + 1}</td>
+                                            <td>{estudiante.nombre}</td>
+                                            <td>{estudiante.apellido}</td>
+                                            <td>{estudiante.cedula}</td>
+                                            <td>{estudiante.direccion}</td>
+                                            <td>{estudiante.ciudad}</td>
+                                            <td>{estudiante.telefono}</td>
+                                            <td style={{ textAlign: "center" }}>
+                                                <Button
+                                                    variant="link"
+                                                    onClick={() => visualizarEstudiante(estudiante._id)}
+                                                    style={{ padding: 0, color: 'inherit', marginRight: '10px' }}
+                                                >
+                                                    <GrUpdate />
+                                                </Button>
+                                                <Button
+                                                    variant="link"
+                                                    onClick={() => eliminarEstudiante(estudiante._id)}
+                                                    title="Eliminar curso"
+                                                    style={{ padding: 0, color: 'inherit' }}
+                                                >
+                                                    <RiDeleteBin2Fill />
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="8" style={{ textAlign: 'center' }}>No se encontraron estudiantes con ese nombre</td>
                                     </tr>
-                                ))
+                                )
                             ) : (
                                 <tr>
-                                    <td colSpan="8" style={{ textAlign: 'center' }}>No existen estudiantes registrados</td>
+                                    <td colSpan="8" style={{ textAlign: 'center' }}>Selecciona un curso para ver los estudiantes</td>
                                 </tr>
-                            )
-                        ) : (
-                            <tr>
-                                <td colSpan="8" style={{ textAlign: 'center' }}>Selecciona un curso para ver los estudiantes</td>
-                            </tr>
-                        )}
-                    </tbody>
-
-                </Table>
+                            )}
+                        </tbody>
+                    </Table>
+                </div>
             </Row>
-            {/* Modal para actualizar curso */}
+            {/* Modal para actualizar estudiante */}
             <Modal show={showUpdate} onHide={handleCloseUpdate}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Actualizar Curso</Modal.Title>
+                    <Modal.Title>Actualizar Estudiante</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={handleSubmitUpdate(actualizarEstudiante)}>
@@ -421,7 +441,7 @@ export default function Estudiantes() {
                                 Cancelar
                             </Button>
                             <Button variant="primary" type='submit'>
-                                Actualizar Curso
+                                Actualizar
                             </Button>
                         </Modal.Footer>
                     </Form>
