@@ -39,7 +39,7 @@ export default function Register() {
             console.log('Respuesta exitosa:', response.data);
             //limpiar form
             reset();
-            navigate("/");
+            navigate("/login");
         } catch (error) {
             // Manejar errores
             console.error('Error en la petición:', error);

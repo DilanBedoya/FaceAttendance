@@ -54,7 +54,7 @@ export default function RecoverPassword() {
     //funcion para navegar al login
     const navigate = useNavigate();
     const handleLogin = () => {
-        navigate("/");
+        navigate("/login");
     };
 
     return (

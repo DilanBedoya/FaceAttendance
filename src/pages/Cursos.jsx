@@ -5,7 +5,8 @@ import { GrUpdate } from "react-icons/gr";
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-
+//manejar estado del usuario
+import userAuth from '../context/AuthProvider';
 export default function Cursos() {
 
     // Formulario de Crear
@@ -41,6 +42,35 @@ export default function Cursos() {
     const handleCloseUpdate = () => setShowUpdate(false);
 
 
+    const materiasPorSemestre = {
+        "Segundo Semestre": [
+            { nombre: 'Programación' },
+            { nombre: 'Algoritmos Y Estructuras De Datos' },
+            { nombre: 'Arquitectura De Computadores' },
+            { nombre: 'Redes De Computadores' },
+            { nombre: 'Sistemas Operativos' },
+        ],
+        "Tercer Semestre": [
+            { nombre: 'Programación Orientada A Objetos' },
+            { nombre: 'Diseño De Interfaces' },
+            { nombre: 'Gestión De Proyectos De Software' },
+            { nombre: 'Base De Datos' },
+            { nombre: 'Análisis De Datos' },
+        ],
+        "Cuarto Semestre": [
+            { nombre: 'Desarrollo De Aplicaciones Web' },
+            { nombre: 'Desarrollo De IoT' },
+            { nombre: 'Fundamentos De Inteligencia Artificial' },
+            { nombre: 'Metodología De Investigación' },
+        ],
+        "Quinto Semestre": [
+            { nombre: 'Desarrollo De Aplicaciones Móviles' },
+            { nombre: 'Aplicaciones Distribuidas' },
+            { nombre: 'Tecnologías De Seguridad' },
+        ],
+    };
+
+    const [semestreSeleccionado, setSemestreSeleccionado] = useState('Segundo Semestre');
 
 
     const crearCurso = async (data) => {
@@ -86,22 +116,49 @@ export default function Cursos() {
         }
     };
 
-    //Función para listar cursos
+    //Función para listar cursos con GET
+
+    // const [cursos, setCursos] = useState([]); // Estado para almacenar los cursos
+
+    // const listarCursos = async () => {
+    //     try {
+    //         const token = localStorage.getItem("token")
+    //         //url del endpoint para el crear curso
+    //         const url = `${import.meta.env.VITE_URL_BACKEND}/curso/visualizar`
+    //         const headers = {
+    //             "Content-Type": "application/json",
+    //             Authorization: `Bearer ${token}`
+    //         }
+
+    //         // Hacer la petición POST al backend con token
+    //         const response = await axios.get(url, { headers });
+    //         setCursos(response.data); // Guardar los cursos en el estado
+    //         console.log(response.data);
+
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
 
     const [cursos, setCursos] = useState([]); // Estado para almacenar los cursos
+
+    const user = userAuth((state) => state.user);
 
     const listarCursos = async () => {
         try {
             const token = localStorage.getItem("token")
             //url del endpoint para el crear curso
             const url = `${import.meta.env.VITE_URL_BACKEND}/curso/visualizar`
+            const data = {
+                "docenteId": user.id
+            }
             const headers = {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`
             }
 
             // Hacer la petición POST al backend con token
-            const response = await axios.get(url, { headers });
+            const response = await axios.post(url, data, { headers });
             setCursos(response.data); // Guardar los cursos en el estado
             console.log(response.data);
 
@@ -109,6 +166,7 @@ export default function Cursos() {
             console.log(error);
         }
     }
+
 
     useEffect(() => {
         listarCursos();
@@ -302,18 +360,42 @@ export default function Cursos() {
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={handleSubmitCreate(crearCurso)}>
-                        <Form.Group controlId="formCourseName">
+                        <Form.Group controlId="formSemestre">
                             <Form.Label>Materia</Form.Label>
-                            <Form.Control type="text" placeholder="Ingrese el nombre de la materia" className={errorsCreate.materia ? 'is-invalid mb-1' : 'mb-1'}
-                                {...registerCreate('materia', {
-                                    required: {
-                                        value: true,
-                                        message: "Materia es requerido"
-                                    },
-
-                                })}
-                            />
+                            <Form.Select
+                                as="select"
+                                value={semestreSeleccionado}
+                                onChange={(e) => setSemestreSeleccionado(e.target.value)}>
+                                {Object.keys(materiasPorSemestre).map((semestre, index) => (
+                                    <option key={index} value={semestre}>
+                                        {semestre}
+                                    </option>
+                                ))}
+                            </Form.Select>
                         </Form.Group>
+
+                        <Form.Group controlId="formCourseName">
+
+                            <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                                {materiasPorSemestre[semestreSeleccionado].map((materia, index) => (
+                                    <Form.Check
+                                        key={index}
+                                        type="radio"
+                                        label={materia.nombre}
+                                        value={materia.nombre}
+                                        name="materia"
+                                        {...registerCreate('materia', {
+                                            required: {
+                                                value: true,
+                                                message: "Selecciona una materia"
+                                            },
+                                        })}
+                                    />
+                                ))}
+                            </div>
+                        </Form.Group>
+
+
                         {errorsCreate.materia && <span style={{ color: 'red', fontSize: '0.8rem' }}>{errorsCreate.materia.message}</span>}
 
                         <Form.Group controlId="formCourseCode">
@@ -402,7 +484,7 @@ export default function Cursos() {
                     <Form onSubmit={handleSubmitUpdate(actualizarCurso)}>
                         <Form.Group controlId="formCourseName">
                             <Form.Label>Materia</Form.Label>
-                            <Form.Control type="text" placeholder="Ingrese el nombre de la materia" className={errorsUpdate.materia ? 'is-invalid mb-1' : 'mb-1'}
+                            <Form.Control disabled type="text" placeholder="Ingrese el nombre de la materia" className={errorsUpdate.materia ? 'is-invalid mb-1' : 'mb-1'}
                                 {...registerUpdate('materia', {
                                     required: {
                                         value: true,
