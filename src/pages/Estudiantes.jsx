@@ -212,10 +212,18 @@ export default function Estudiantes() {
             <div>
                 <h1 style={{ textAlign: 'center' }}>Gestionar Estudiantes</h1>
             </div>
+
+            <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'justify', lineHeight: '1.6' }}>
+                Este módulo está diseñado para facilitar la administración de los estudiantes dentro del
+                sistema, desde aquí, podrás visualizar, editar y eliminar los registros de los
+                estudiantes de manera sencilla y eficiente.
+
+            </h6>
+
             <Row className='text-center'>
                 <Col className='d-flex flex-column align-items-center'>
                     {/* Botón para seleccionar curso */}
-                    <Form.Label>Seleccione el curso</Form.Label>
+                    <Form.Label><strong>Seleccione el Curso</strong></Form.Label>
                     <DropdownButton variant='outline-dark' title={selectedCourse ? selectedCourse.materia : "Opciones"} onSelect={handleSelectSubject}>
                         {cursos.map((curso) => (
                             <Dropdown.Item key={curso._id} eventKey={curso._id}>{curso.materia + " - " + curso.paralelo}</Dropdown.Item>

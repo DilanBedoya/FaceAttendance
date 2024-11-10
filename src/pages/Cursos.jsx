@@ -43,34 +43,34 @@ export default function Cursos() {
 
 
     const materiasPorSemestre = {
-        "Segundo Semestre": [
+        "Segundo": [
             { nombre: 'Programación' },
             { nombre: 'Algoritmos Y Estructuras De Datos' },
             { nombre: 'Arquitectura De Computadores' },
             { nombre: 'Redes De Computadores' },
             { nombre: 'Sistemas Operativos' },
         ],
-        "Tercer Semestre": [
+        "Tercero": [
             { nombre: 'Programación Orientada A Objetos' },
             { nombre: 'Diseño De Interfaces' },
             { nombre: 'Gestión De Proyectos De Software' },
             { nombre: 'Base De Datos' },
             { nombre: 'Análisis De Datos' },
         ],
-        "Cuarto Semestre": [
+        "Cuarto": [
             { nombre: 'Desarrollo De Aplicaciones Web' },
             { nombre: 'Desarrollo De IoT' },
             { nombre: 'Fundamentos De Inteligencia Artificial' },
             { nombre: 'Metodología De Investigación' },
         ],
-        "Quinto Semestre": [
+        "Quinto": [
             { nombre: 'Desarrollo De Aplicaciones Móviles' },
             { nombre: 'Aplicaciones Distribuidas' },
             { nombre: 'Tecnologías De Seguridad' },
         ],
     };
 
-    const [semestreSeleccionado, setSemestreSeleccionado] = useState('Segundo Semestre');
+    const [semestreSeleccionado, setSemestreSeleccionado] = useState('Seleccione el ciclo académico');
 
 
     const crearCurso = async (data) => {
@@ -115,30 +115,6 @@ export default function Cursos() {
             });
         }
     };
-
-    //Función para listar cursos con GET
-
-    // const [cursos, setCursos] = useState([]); // Estado para almacenar los cursos
-
-    // const listarCursos = async () => {
-    //     try {
-    //         const token = localStorage.getItem("token")
-    //         //url del endpoint para el crear curso
-    //         const url = `${import.meta.env.VITE_URL_BACKEND}/curso/visualizar`
-    //         const headers = {
-    //             "Content-Type": "application/json",
-    //             Authorization: `Bearer ${token}`
-    //         }
-
-    //         // Hacer la petición POST al backend con token
-    //         const response = await axios.get(url, { headers });
-    //         setCursos(response.data); // Guardar los cursos en el estado
-    //         console.log(response.data);
-
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
 
     const [cursos, setCursos] = useState([]); // Estado para almacenar los cursos
 
@@ -297,7 +273,12 @@ export default function Cursos() {
             <div>
                 <h1 style={{ textAlign: 'center' }}>Gestionar Cursos</h1>
             </div>
+            <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'justify', lineHeight: '1.6' }}>
+                En este módulo podrás visualizar, agregar, actualizar y eliminar los cursos disponibles,
+                gestionar los cursos de manera eficiente es clave para 
+                ofrecer una experiencia educativa organizada y sin contratiempos.
 
+            </h6>
             <Container className="mt-2">
                 <Button variant="dark" className='mb-4' onClick={handleShow}>
                     Crear Curso
@@ -366,6 +347,8 @@ export default function Cursos() {
                                 as="select"
                                 value={semestreSeleccionado}
                                 onChange={(e) => setSemestreSeleccionado(e.target.value)}>
+
+                                <option value="">Seleccione el ciclo académico</option>
                                 {Object.keys(materiasPorSemestre).map((semestre, index) => (
                                     <option key={index} value={semestre}>
                                         {semestre}
@@ -374,24 +357,26 @@ export default function Cursos() {
                             </Form.Select>
                         </Form.Group>
 
-                        <Form.Group controlId="formCourseName">
 
+                        <Form.Group controlId="formCourseName">
                             <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                                {materiasPorSemestre[semestreSeleccionado].map((materia, index) => (
-                                    <Form.Check
-                                        key={index}
-                                        type="radio"
-                                        label={materia.nombre}
-                                        value={materia.nombre}
-                                        name="materia"
-                                        {...registerCreate('materia', {
-                                            required: {
-                                                value: true,
-                                                message: "Selecciona una materia"
-                                            },
-                                        })}
-                                    />
-                                ))}
+                                {(
+                                    materiasPorSemestre[semestreSeleccionado]?.map((materia, index) => (
+                                        <Form.Check
+                                            key={index}
+                                            type="radio"
+                                            label={materia.nombre}
+                                            value={materia.nombre}
+                                            name="materia"
+                                            {...registerCreate('materia', {
+                                                required: {
+                                                    value: true,
+                                                    message: "Selecciona una materia"
+                                                },
+                                            })}
+                                        />
+                                    ))
+                                )}
                             </div>
                         </Form.Group>
 
@@ -463,10 +448,10 @@ export default function Cursos() {
                         {errorsCreate.semestre && <span style={{ color: 'red', fontSize: '0.8rem' }}>{errorsCreate.semestre.message}</span>}
 
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={handleClose}>
+                            <Button variant="secondary" onClick={handleClose} >
                                 Cancelar
                             </Button>
-                            <Button variant="primary" type='submit' >
+                            <Button variant="primary" type='submit' disabled={semestreSeleccionado == "Seleccione el ciclo académico" || semestreSeleccionado == ''} >
                                 Guardar Curso
                             </Button>
                         </Modal.Footer>

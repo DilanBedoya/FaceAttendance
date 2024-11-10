@@ -12,10 +12,10 @@ const CardProfile = () => {
     useEffect(() => {
         reset({
             id: user?.id || '',
-            nombre: user?.nombre || '',  // Asignar nombre por defecto
-            apellido: user?.apellido || '',  // Asignar apellido por defecto
-            ciudad: user?.ciudad || '',// Asignar ciudad por defecto
-            direccion: user?.direccion || '',// Asignar ciudad por defecto
+            nombre: user?.nombre || '',  // Asignar por defecto
+            apellido: user?.apellido || '',
+            ciudad: user?.ciudad || '',
+            direccion: user?.direccion || '',
             email: user?.email || '',
         });
     }, [user, reset]);
@@ -27,11 +27,12 @@ const CardProfile = () => {
 
     return (
         <Card className="m-3">
+            
             <Card.Body>
                 <Row>
 
                     <Card.Title>Actualizar Perfil</Card.Title>
-
+                    
                     <Col>
                         <Form onSubmit={handleSubmit(onSubmit)}>
                             {/* Campo oculto para el ID */}
