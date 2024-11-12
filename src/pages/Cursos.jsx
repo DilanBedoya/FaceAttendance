@@ -499,7 +499,7 @@ export default function Cursos() {
 
                         <Form.Group controlId="formCourseCode">
                             <Form.Label>Código</Form.Label>
-                            <Form.Control type="text" placeholder="Ingrese el código del curso" className={errorsUpdate.codigo ? 'is-invalid mb-1' : 'mb-1'}
+                            <Form.Control type="text" disabled placeholder="Ingrese el código del curso" className={errorsUpdate.codigo ? 'is-invalid mb-1' : 'mb-1'}
                                 {...registerUpdate('codigo', {
                                     required: {
                                         value: true,

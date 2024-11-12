@@ -17,7 +17,8 @@ import Reportes from './pages/Reportes';
 import Estudiantes from './pages/Estudiantes';
 import PrivateRoute from './routes/PrivateRoute';
 import RegistroAsitencias from './pages/RegisterPage';
-
+import Restablecer from './pages/RestablecerPassword';
+import Confirmar from './pages/Confirmar';
 
 
 
@@ -33,7 +34,9 @@ function App() {
         <Route path='login' element={<Login />} />
         <Route path='register' element={<Register />} />
         <Route path='recover-password' element={<RecoverPassword />} />
-
+        <Route path='confirmar/:token' element={<Confirmar />} />
+        <Route path='recuperar-password/:token' element={<Restablecer />} />
+        
         //rutas privada
         <Route path='dashboard/*' element={<PrivateRoute> < Dashboard /> </PrivateRoute>}>
           <Route index element={<Perfil />} />
