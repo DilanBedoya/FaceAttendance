@@ -122,6 +122,8 @@ export default function Cursos() {
 
     const listarCursos = async () => {
         try {
+            
+
             const token = localStorage.getItem("token")
             //url del endpoint para el crear curso
             const url = `${import.meta.env.VITE_URL_BACKEND}/curso/visualizar`
@@ -280,7 +282,7 @@ export default function Cursos() {
                 <h1 style={{ textAlign: 'center' }}>Gestionar Cursos</h1>
             </div>
             <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'justify', lineHeight: '1.6' }}>
-                En este módulo podrás visualizar, agregar, actualizar y eliminar los cursos disponibles,
+                En este módulo podrá visualizar, agregar, actualizar y eliminar los cursos disponibles,
                 gestionar los cursos de manera eficiente es clave para
                 ofrecer una experiencia educativa organizada y sin contratiempos.
 

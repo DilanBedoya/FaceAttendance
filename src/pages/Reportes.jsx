@@ -40,7 +40,7 @@ export default function Reportes() {
             Swal.fire({
                 icon: 'question',
                 title: 'Advertencia',
-                text: "El curso o la fecha no ha sido seleccionado aún",
+                text: "La fecha no ha sido seleccionado aún",
                 confirmButtonText: 'OK',
                 confirmButtonColor: 'black'
             });
@@ -122,7 +122,7 @@ export default function Reportes() {
             return response.data;
         } catch (error) {
             console.log(error);
-
+            setStudents([])
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -145,6 +145,13 @@ export default function Reportes() {
             <div>
                 <h1 style={{ textAlign: 'center' }}>Reportes</h1>
             </div>
+            <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'justify', lineHeight: '1.6' }}>
+                Consulte y analice la asistencia de estudiantes de cada curso de manera rápida y detallada,
+                puede seleccionar el curso para ver el reporte total o filtrar por una fecha específica y revisar
+                la asistencia de los estudiantes,
+                además, puede generar un PDF para obtener el reporte.
+
+            </h6>
             <Row className='text-center'>
                 <Col className='d-flex flex-column align-items-center'>
                     {/* Botón para seleccionar curso */}
@@ -233,7 +240,7 @@ export default function Reportes() {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="8" style={{ textAlign: 'center' }}>No se encontraron estudiantes con esa fecha</td>
+                                        <td colSpan="8" style={{ textAlign: 'center' }}>No se encontraron estudiantes</td>
                                     </tr>
                                 )
                             ) : (

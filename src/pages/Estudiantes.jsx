@@ -35,14 +35,17 @@ export default function Estudiantes() {
             const response = await axios.post(url, data, { headers });
             setCursos(response.data); // Guardar los cursos en el estado
             console.log(response.data);
+
         } catch (error) {
             console.log(error);
+
         }
     };
 
     // Función para listar estudiantes del curso seleccionado
     const listarEstudiantes = async (curso) => {
         try {
+
             const token = localStorage.getItem("token");
             const url = `${import.meta.env.VITE_URL_BACKEND}/docente/visualizar/estudiantes`;
             const data = {
@@ -59,8 +62,10 @@ export default function Estudiantes() {
             const response = await axios.post(url, data, { headers });
             setStudents(response.data); // Guardar los estudiantes en el estado
             console.log(response.data);
+
         } catch (error) {
             console.log(error);
+            setStudents([])
         }
     };
 
@@ -216,6 +221,7 @@ export default function Estudiantes() {
         estudiante.apellido.toLowerCase().includes(filter.toLowerCase())
     );
 
+
     return (
         <Container>
 
@@ -227,7 +233,7 @@ export default function Estudiantes() {
 
             <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'justify', lineHeight: '1.6' }}>
                 Este módulo está diseñado para facilitar la administración de los estudiantes dentro del
-                sistema, desde aquí, podrás visualizar, editar y eliminar los registros de los
+                sistema, desde aquí, podrá visualizar, editar y eliminar los registros de los
                 estudiantes de manera sencilla y eficiente.
 
             </h6>
@@ -259,7 +265,7 @@ export default function Estudiantes() {
                 <div>
                     {/* Input para filtrar por nombre */}
                     <Form.Group controlId="filterName" style={{ textAlign: 'left' }}>
-                        
+
                         <Form.Control
                             type="text"
                             placeholder="Escribe un nombre para buscar el estudiante"
@@ -315,7 +321,7 @@ export default function Estudiantes() {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="8" style={{ textAlign: 'center' }}>No se encontraron estudiantes con ese nombre</td>
+                                        <td colSpan="8" style={{ textAlign: 'center' }}>No se encontraron estudiantes</td>
                                     </tr>
                                 )
                             ) : (
