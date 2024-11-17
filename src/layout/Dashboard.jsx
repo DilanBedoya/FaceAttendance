@@ -49,10 +49,10 @@ export default function Dashboard() {
                             Asistencias
                         </Nav.Link>
                         <Nav.Link as={Link} to="actuaciones" className="text-white">
-                            Actuaciones
+                            Reporte Actuaciones
                         </Nav.Link>
                         <Nav.Link as={Link} to="reportes" className="text-white">
-                            Reportes
+                            Reporte Asistencias
                         </Nav.Link>
                     </Nav>
                 </Col>

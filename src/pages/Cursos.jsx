@@ -284,7 +284,7 @@ export default function Cursos() {
             <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'justify', lineHeight: '1.6' }}>
                 En este módulo podrá visualizar, agregar, actualizar y eliminar los cursos disponibles,
                 gestionar los cursos de manera eficiente es clave para
-                ofrecer una experiencia educativa organizada y sin contratiempos.
+                ofrecer una experiencia educativa organizada y sin contratiempos.   
 
             </h6>
             <Container className="mt-2">
@@ -296,7 +296,7 @@ export default function Cursos() {
                     <Form.Group controlId="filterCourse">
                         <Form.Control
                             type="text"
-                            placeholder="Escribe la materia para buscar el curso"
+                            placeholder="Filtrar por nombre de la materia"
                             value={filter}
                             onChange={(e) => setFilter(e.target.value)}
                         />

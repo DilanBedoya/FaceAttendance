@@ -119,6 +119,8 @@ export default function Login() {
                                     {...register('email', {
                                         required: {
                                             value: true,
+                                            message: "Email es requerido"
+
                                         },
                                         //Validar luego para el correo
 
@@ -139,6 +141,7 @@ export default function Login() {
                                     {...register('password', {
                                         required: {
                                             value: true,
+                                            message: "Contraseña es requerido"
                                         },
                                         minLength: {
                                             value: 3,

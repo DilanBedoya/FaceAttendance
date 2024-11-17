@@ -49,6 +49,7 @@ export default function Estudiantes() {
             const token = localStorage.getItem("token");
             const url = `${import.meta.env.VITE_URL_BACKEND}/docente/visualizar/estudiantes`;
             const data = {
+                
                 "materia": curso.materia,
                 "paralelo": curso.paralelo,
                 "semestre": curso.semestre
@@ -268,7 +269,7 @@ export default function Estudiantes() {
 
                         <Form.Control
                             type="text"
-                            placeholder="Escribe un nombre para buscar el estudiante"
+                            placeholder="Filtrar por nombre o apellido"
                             value={filter}
                             onChange={(e) => setFilter(e.target.value)} // Actualiza el valor del filtro
                         />
@@ -283,6 +284,7 @@ export default function Estudiantes() {
                                 <th>Apellido</th>
                                 <th>Cédula</th>
                                 <th>Dirección</th>
+                                <th>Correo Electrónico</th>
                                 <th>Ciudad</th>
                                 <th>Teléfono</th>
                                 <th style={{ textAlign: "center" }}>Acciones</th>
@@ -298,6 +300,7 @@ export default function Estudiantes() {
                                             <td>{estudiante.apellido}</td>
                                             <td>{estudiante.cedula}</td>
                                             <td>{estudiante.direccion}</td>
+                                            <td>{estudiante.email}</td>
                                             <td>{estudiante.ciudad}</td>
                                             <td>{estudiante.telefono}</td>
                                             <td style={{ textAlign: "center" }}>
@@ -321,12 +324,12 @@ export default function Estudiantes() {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="8" style={{ textAlign: 'center' }}>No se encontraron estudiantes</td>
+                                        <td colSpan="9" style={{ textAlign: 'center' }}>No se encontraron estudiantes</td>
                                     </tr>
                                 )
                             ) : (
                                 <tr>
-                                    <td colSpan="8" style={{ textAlign: 'center' }}>Selecciona un curso para ver los estudiantes</td>
+                                    <td colSpan="9" style={{ textAlign: 'center' }}>Selecciona un curso para ver los estudiantes</td>
                                 </tr>
                             )}
                         </tbody>

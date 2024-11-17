@@ -4,7 +4,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useForm } from 'react-hook-form';
 import imagenes from '../components/images';
-import '../styles/login.css'; 
+import '../styles/login.css';
 
 
 export default function Restablecer() {
@@ -12,7 +12,7 @@ export default function Restablecer() {
     const navigate = useNavigate();
     const [tokenback, setTokenBack] = useState(false);
     const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm();
-    
+
     // Verificación del token
     useEffect(() => {
         const verifyToken = async () => {
@@ -43,7 +43,7 @@ export default function Restablecer() {
         try {
             const url = `${import.meta.env.VITE_URL_BACKEND}/docente/nueva-password/${token}`;
             const respuesta = await axios.post(url, data);
-            
+
             Swal.fire({
                 icon: 'success',
                 title: 'Contraseña Restablecida',
@@ -54,7 +54,7 @@ export default function Restablecer() {
             reset();
             setTimeout(() => {
                 navigate('/login');
-            }, 3000);
+            }, 2000);
         } catch (error) {
             Swal.fire({
                 icon: 'error',
@@ -78,8 +78,8 @@ export default function Restablecer() {
                     {tokenback ? (
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="mb-3">
-                                <input 
-                                    type="password" 
+                                <input
+                                    type="password"
                                     placeholder="Nueva Contraseña"
                                     className={`form-control ${errors.password ? 'is-invalid' : ''}`}
                                     {...register('password', { required: 'La contraseña es obligatoria' })}
@@ -87,8 +87,8 @@ export default function Restablecer() {
                                 {errors.password && <span className="text-danger">{errors.password.message}</span>}
                             </div>
                             <div className="mb-3">
-                                <input 
-                                    type="password" 
+                                <input
+                                    type="password"
                                     placeholder="Confirma tu Contraseña"
                                     className={`form-control ${errors.confirmpassword ? 'is-invalid' : ''}`}
                                     {...register('confirmarPassword', { required: 'La confirmación es obligatoria' })}

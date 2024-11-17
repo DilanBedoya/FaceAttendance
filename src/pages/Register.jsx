@@ -98,6 +98,7 @@ export default function Register() {
                                         />
 
                                     </Form.Group>
+                                    {errors.nombre && <span style={{ color: 'red', fontSize: '0.8rem' }}>{errors.nombre.message}</span>}
 
 
                                 </Col>
@@ -114,6 +115,7 @@ export default function Register() {
                                             })}
                                         />
                                     </Form.Group>
+                                    {errors.apellido && <span style={{ color: 'red', fontSize: '0.8rem' }}>{errors.apellido.message}</span>}
 
                                 </Col>
                             </Row>
@@ -132,11 +134,13 @@ export default function Register() {
                                             })}
                                         />
                                     </Form.Group>
+                                    {errors.ciudad && <span style={{ color: 'red', fontSize: '0.8rem' }}>{errors.ciudad.message}</span>}
+
                                 </Col>
                                 <Col>
                                     <Form.Group controlId="formBasicDireccion">
                                         <Form.Label>Dirección</Form.Label>
-                                        <Form.Control type="text" placeholder="Ingresa tu dirección" className={errors.Direccion ? 'is-invalid mb-1' : 'mb-1'}
+                                        <Form.Control type="text" placeholder="Ingresa tu dirección" className={errors.direccion ? 'is-invalid mb-1' : 'mb-1'}
                                             {...register('direccion', {
                                                 required: {
                                                     value: true,
@@ -146,6 +150,8 @@ export default function Register() {
                                             })}
                                         />
                                     </Form.Group>
+                                    {errors.direccion && <span style={{ color: 'red', fontSize: '0.8rem' }}>{errors.direccion.message}</span>}
+
                                 </Col>
                             </Row>
 
@@ -156,6 +162,7 @@ export default function Register() {
                                         {...register('email', {
                                             required: {
                                                 value: true,
+                                                message: "Email es requerido"
                                             },
                                             //Validar luego para el correo
 
@@ -178,6 +185,8 @@ export default function Register() {
                                         {...register('password', {
                                             required: {
                                                 value: true,
+                                                message: "Contraseña es requerido"
+
                                             },
                                             minLength: {
                                                 value: 3,

@@ -189,7 +189,7 @@ export default function Reportes() {
 
                         <Form.Control
                             type="text"
-                            placeholder="Escribe un nombre para buscar el estudiante"
+                            placeholder="Filtrar por nombre o apellido"
                             value={filter}
                             onChange={(e) => setFilter(e.target.value)}
                         />
@@ -209,9 +209,9 @@ export default function Reportes() {
                                     </>
                                 ) : (
                                     <>
-                                        <th>Cantidad Presentes</th>
-                                        <th>Cantidad Ausentes</th>
-                                        <th>Cantidad Total</th>
+                                        <th>Asistencias durante el semestre</th>
+                                        <th>Ausencias durante el semestre</th>
+                                        <th>Total</th>
                                     </>
                                 )}
                             </tr>
