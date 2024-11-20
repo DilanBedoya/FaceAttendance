@@ -1,18 +1,52 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Form, Button, Table, Dropdown, DropdownButton } from 'react-bootstrap';
 import { RiDeleteBin2Fill } from "react-icons/ri";
 import { GrUpdate } from "react-icons/gr";
 import { BiCommentDetail } from "react-icons/bi";
-
+import axios from 'axios';
+import userAuth from '../context/AuthProvider';
 export default function Actuaciones() {
+    const user = userAuth((state) => state.user);
+    const [cursos, setCursos] = useState([]); // Estado para almacenar los cursos
+    const [selectedCourse, setSelectedCourse] = useState(null); // Estado para almacenar el curso seleccionado
+
+    // Función para listar cursos
+    const listarCursos = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const url = `${import.meta.env.VITE_URL_BACKEND}/curso/visualizar`;
+            const data = { "docenteId": user.id };
+            const headers = {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            };
+
+            // Hacer la petición POST al backend con token
+            const response = await axios.post(url, data, { headers });
+            setCursos(response.data); // Guardar los cursos en el estado
+            console.log(response.data);
+
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        listarCursos();
+    }, []);
+
+    // Manejar la selección del curso en el Dropdown
+    const handleSelectSubject = (cursoId) => {
+        const cursoSeleccionado = cursos.find(curso => curso._id === cursoId);
+        setSelectedCourse(cursoSeleccionado);
+
+    };
+
 
     const [subject, setSubject] = useState('');
 
 
-    const handleSelectSubject = (subject) => {
-        setSubject(subject);
-    };
 
     return (
         <Container>
@@ -21,15 +55,26 @@ export default function Actuaciones() {
             </div>
             <Row className='text-center'>
                 <Col className='d-flex flex-column align-items-center'>
-                    {/* Botón para seleccionar materia */}
-                    <Form.Label>Seleccione la Materia</Form.Label>
-                    <DropdownButton variant='outline-dark' title="Opciones" onSelect={handleSelectSubject}>
-                        <Dropdown.Item eventKey="POO">POO</Dropdown.Item>
-                        <Dropdown.Item eventKey="Matemáticas">Matemáticas</Dropdown.Item>
+                    {/* Botón para seleccionar curso */}
+                    <Form.Label><strong>Seleccione el Curso</strong></Form.Label>
+                    <DropdownButton variant='outline-dark' title={selectedCourse ? selectedCourse.materia : "Opciones"} onSelect={handleSelectSubject}>
+                        {cursos.map((curso) => (
+                            <Dropdown.Item key={curso._id} eventKey={curso._id}>{curso.materia + " - " + curso.paralelo}</Dropdown.Item>
+                        ))}
                     </DropdownButton>
-
                 </Col>
+            </Row>
 
+            <Row className='mt-3 text-center'>
+                <Col>
+                    <h5>Materia: {selectedCourse ? selectedCourse.materia : "---"}</h5>
+                </Col>
+                <Col>
+                    <h5>Semestre : {selectedCourse ? selectedCourse.semestre : "---"}</h5>
+                </Col>
+                <Col>
+                    <h5>Paralelo : {selectedCourse ? selectedCourse.paralelo : "---"}</h5>
+                </Col>
             </Row>
 
 

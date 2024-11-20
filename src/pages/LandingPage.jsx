@@ -27,7 +27,7 @@ function LandingPage() {
                     <p className="lead">El sistema de toma de asistencia mediante reconocimiento facial</p>
                     <img src={`${imagenes.logo}`} alt="Logo" style={{ height: '200px', borderRadius: '40px' }} />
                     <br />
-                    <Button variant="light" size="lg" className="mt-3">Comenzar Ahora</Button>
+                    <Button variant="light" size="lg" className="mt-3" onClick={() => { navigate("/login") }}>Comenzar Ahora</Button>
                 </Container>
             </Container>
 

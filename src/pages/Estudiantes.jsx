@@ -49,7 +49,7 @@ export default function Estudiantes() {
             const token = localStorage.getItem("token");
             const url = `${import.meta.env.VITE_URL_BACKEND}/docente/visualizar/estudiantes`;
             const data = {
-                
+
                 "materia": curso.materia,
                 "paralelo": curso.paralelo,
                 "semestre": curso.semestre
@@ -100,6 +100,7 @@ export default function Estudiantes() {
         //si el docente confirma la eliminacion
         if (isConfirmed) {
             try {
+
                 const token = localStorage.getItem("token")
                 //url del endpoint para el crear curso
                 const url = `${import.meta.env.VITE_URL_BACKEND}/docente/eliminar/estudiante/${id}`
@@ -108,8 +109,12 @@ export default function Estudiantes() {
                     Authorization: `Bearer ${token}`
                 }
 
+                const data = {
+                    "cursoId": selectedCourse._id
+                }
+                console.log(data);
                 // Hacer la petición POST al backend con token
-                const response = await axios.delete(url, { headers });
+                const response = await axios.delete(url, data, { headers });
 
 
                 //mostrar alerta correcta
@@ -181,6 +186,14 @@ export default function Estudiantes() {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`
             }
+            
+
+            console.log(data.nombre);
+            console.log(data.apellido);
+            console.log(data.cedula);
+            console.log(data.direccion);
+            console.log(data.ciudad);
+            console.log(data.telefono);
 
             // Hacer la petición POST al backend con token
             const response = await axios.put(url, data, { headers });
@@ -231,13 +244,14 @@ export default function Estudiantes() {
             <div>
                 <h1 style={{ textAlign: 'center' }}>Gestionar Estudiantes</h1>
             </div>
+            <hr style={{ border: 'none', borderTop: '4px solid #aaa', margin: '20px 0', width: '100%', borderRadius: '8px', opacity: 0.5 }} />
 
-            <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'justify', lineHeight: '1.6' }}>
-                Este módulo está diseñado para facilitar la administración de los estudiantes dentro del
-                sistema, desde aquí, podrá visualizar, editar y eliminar los registros de los
-                estudiantes de manera sencilla y eficiente.
+            <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'center', lineHeight: '1.6' }}>
+                Este módulo permite visualizar, editar y eliminar los registros de los
+                estudiantes.
 
             </h6>
+            <hr style={{ border: 'none', borderTop: '4px solid #aaa', margin: '20px 0', width: '100%', borderRadius: '8px', opacity: 0.5 }} />
 
             <Row className='text-center'>
                 <Col className='d-flex flex-column align-items-center'>

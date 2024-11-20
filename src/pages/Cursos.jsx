@@ -122,7 +122,7 @@ export default function Cursos() {
 
     const listarCursos = async () => {
         try {
-            
+
 
             const token = localStorage.getItem("token")
             //url del endpoint para el crear curso
@@ -281,12 +281,14 @@ export default function Cursos() {
             <div>
                 <h1 style={{ textAlign: 'center' }}>Gestionar Cursos</h1>
             </div>
-            <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'justify', lineHeight: '1.6' }}>
-                En este módulo podrá visualizar, agregar, actualizar y eliminar los cursos disponibles,
-                gestionar los cursos de manera eficiente es clave para
-                ofrecer una experiencia educativa organizada y sin contratiempos.   
+            <hr style={{ border: 'none', borderTop: '4px solid #aaa', margin: '20px 0', width: '100%', borderRadius: '8px', opacity: 0.5 }} />
+
+            <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'center', lineHeight: '1.6' }}>
+                Este módulo permite visualizar, agregar, actualizar y eliminar los cursos disponibles.
 
             </h6>
+            <hr style={{ border: 'none', borderTop: '4px solid #aaa', margin: '20px 0', width: '100%', borderRadius: '8px', opacity: 0.5 }} />
+
             <Container className="mt-2">
                 <Button variant="dark" className='mb-4' onClick={handleShow}>
                     Crear Curso

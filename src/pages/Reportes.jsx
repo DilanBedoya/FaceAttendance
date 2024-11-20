@@ -4,7 +4,8 @@ import { Container, Row, Col, Form, Button, Table, Dropdown, DropdownButton } fr
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
-
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 //manejar estado del usuario
 import userAuth from '../context/AuthProvider';
 export default function Reportes() {
@@ -140,18 +141,113 @@ export default function Reportes() {
         estudiante.estudiante?.nombre.toLowerCase().includes(filter.toLowerCase()) ||
         estudiante.estudiante?.apellido.toLowerCase().includes(filter.toLowerCase())
     );
+
+
+    const generatePDF = async () => {
+        // Validación de curso y estudiantes
+        if (!selectedCourse) {
+            await Swal.fire({
+                title: 'Error',
+                text: 'Por favor, selecciona un curso para generar el reporte.',
+                icon: 'question',
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            });
+            return;
+        }
+
+        if (!filteredStudents || filteredStudents.length === 0) {
+            await Swal.fire({
+                title: 'Error',
+                text: 'No hay estudiantes en el curso seleccionado para generar el reporte.',
+                icon: 'question',
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            });
+            return;
+        }
+
+        // Mostrar el cuadro de confirmación
+        const { isConfirmed } = await Swal.fire({
+            title: '¡Listo para crear el reporte!',
+            text: `Generaremos el informe para la materia "${selectedCourse.materia + " - " + selectedCourse.paralelo}". ¿Deseas continuar?`,
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#4CAF50',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '¡Sí, adelante!',
+            cancelButtonText: 'Cancelar',
+        });
+
+        if (isConfirmed) {
+            // Generación del PDF
+            const doc = new jsPDF();
+            const title = isFilteredByDate ? `Reporte de Asistencia por Fecha en ${selectedCourse.materia + " " + selectedCourse.paralelo}` : `Reporte de Asistencia Total en ${selectedCourse.materia + " " + selectedCourse.paralelo}`;
+
+            // Título del PDF
+            doc.text(title, 14, 10);
+
+            let tableColumn, tableRows;
+            if (isFilteredByDate) {
+                // Configuración de columnas y filas cuando se filtra por fecha
+                tableColumn = ["#", "Nombre", "Apellido", "Fecha", "Estado de Asistencia"];
+                tableRows = filteredStudents.map((estudiante, index) => [
+                    index + 1,
+                    estudiante.estudiante?.nombre || "",
+                    estudiante.estudiante?.apellido || "",
+                    estudiante.fecha || "",
+                    estudiante.estadoAsistencia || ""
+                ]);
+            } else {
+                // Configuración de columnas y filas para el reporte completo
+                tableColumn = ["#", "Nombre", "Apellido", "Fechas y Estados de Asistencia", "Asistencias", "Ausencias", "Total"];
+                tableRows = filteredStudents.map((estudiante, index) => {
+                    const fechasYEstados = estudiante.fechasAsistencias && estudiante.estadosAsistencias
+                        ? estudiante.fechasAsistencias.map((fecha, i) => `${fecha}: ${estudiante.estadosAsistencias[i] || ''}`).join('\n')
+                        : "";
+
+                    return [
+                        index + 1,
+                        estudiante.estudiante?.nombre || "",
+                        estudiante.estudiante?.apellido || "",
+                        fechasYEstados,
+                        estudiante.cantidadPresentes || 0,
+                        estudiante.cantidadAusencias || 0,
+                        estudiante.cantidadAsistencias || 0
+                    ];
+                });
+            }
+
+            // Genera la tabla en el PDF
+            doc.autoTable({
+                head: [tableColumn],
+                body: tableRows,
+                startY: 20,
+                styles: { halign: 'center', valign: 'middle' },
+                columnStyles: {
+                    3: { cellWidth: isFilteredByDate ? 'auto' : 40 },
+                },
+            });
+
+            // Descarga el PDF
+            doc.save(`${selectedCourse.materia + "_" + selectedCourse.paralelo}_reporte_asistencias.pdf`);
+        }
+    };
+
     return (
         <Container>
             <div>
-                <h1 style={{ textAlign: 'center' }}>Reportes</h1>
+                <h1 style={{ textAlign: 'center' }}>Reporte Asistencia</h1>
             </div>
-            <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'justify', lineHeight: '1.6' }}>
-                Consulte y analice la asistencia de estudiantes de cada curso de manera rápida y detallada,
-                puede seleccionar el curso para ver el reporte total o filtrar por una fecha específica y revisar
-                la asistencia de los estudiantes,
-                además, puede generar un PDF para obtener el reporte.
+            <hr style={{ border: 'none', borderTop: '4px solid #aaa', margin: '20px 0', width: '100%', borderRadius: '8px', opacity: 0.5 }} />
 
+            <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'justify', lineHeight: '1.6' }}>
+                Este módulo permite seleccionar el curso para ver el reporte completo o filtrar por una fecha
+                específica para revisar la asistencia de los estudiantes, además, puede generar un PDF para
+                obtener un reporte detallado, ya sea del total o del filtro aplicado.
             </h6>
+            <hr style={{ border: 'none', borderTop: '4px solid #aaa', margin: '20px 0', width: '100%', borderRadius: '8px', opacity: 0.5 }} />
+
             <Row className='text-center'>
                 <Col className='d-flex flex-column align-items-center'>
                     {/* Botón para seleccionar curso */}
@@ -211,6 +307,7 @@ export default function Reportes() {
                                     <>
                                         <th>Asistencias durante el semestre</th>
                                         <th>Ausencias durante el semestre</th>
+
                                         <th>Total</th>
                                     </>
                                 )}
@@ -231,8 +328,10 @@ export default function Reportes() {
                                                 </>
                                             ) : (
                                                 <>
+
                                                     <td>{estudiante.cantidadPresentes}</td>
                                                     <td>{estudiante.cantidadAusencias}</td>
+
                                                     <td>{estudiante.cantidadAsistencias}</td>
                                                 </>
                                             )}
@@ -257,7 +356,7 @@ export default function Reportes() {
             <div>
 
                 <div className="text-end">
-                    <Button variant="dark" onClick={handleSubmit}>Generar PDF</Button>
+                    <Button variant="dark" onClick={generatePDF} >Generar PDF</Button>
                 </div>
             </div>
         </Container>
