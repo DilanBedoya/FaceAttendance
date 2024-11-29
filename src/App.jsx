@@ -10,7 +10,7 @@ import RecoverPassword from './pages/recoverPassword';
 import NotFound from './pages/notFound';
 import Dashboard from './layout/Dashboard';
 import Perfil from './pages/Perfil';
-import Actuaciones from './pages/actuaciones';
+import Actuaciones from './pages/Actuaciones';
 import Asistencias from './pages/Asistencias';
 import Cursos from './pages/Cursos';
 import Reportes from './pages/Reportes';
@@ -44,7 +44,6 @@ function App() {
           <Route path="cursos" element={<Cursos />} />
           <Route path="asistencias" element={<Asistencias />} />
           <Route path="registro-asistencias" element={<RegistroAsitencias />} />
-
           <Route path="actuaciones" element={<Actuaciones />} />
           <Route path="reportes" element={<Reportes />} />
         </Route>

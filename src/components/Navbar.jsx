@@ -11,7 +11,7 @@ const NavBarComponent = () => {
     return (
         <Navbar bg="dark" variant="dark" expand="lg" sticky="top">
             <Container>
-                <img onClick={() => navigate('/')} src={imagenes.logo} alt="Logo" style={{ height: '25px', borderRadius: '40px', cursor: 'pointer' }} />
+                <img onClick={() => navigate('/')} src={imagenes.logo} alt="Logo" style={{ height: '25px', borderRadius: '40px', cursor: 'pointer',marginRight: '5px' }} />
                 <Navbar.Brand
                     onClick={() => navigate('/')}
                     style={{ cursor: 'pointer' }}

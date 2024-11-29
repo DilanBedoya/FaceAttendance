@@ -44,6 +44,15 @@ export default function Asistencias() {
             <div>
                 <h1 style={{ textAlign: 'center' }}>Gestionar Asistencias</h1>
             </div>
+
+            <hr style={{ border: 'none', borderTop: '4px solid #aaa', margin: '20px 0', width: '100%', borderRadius: '8px', opacity: 0.5 }} />
+
+            <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'left', lineHeight: '1.6' }}>
+                Este módulo te permite registrar la asistencia de los estudiantes.
+
+            </h6>
+            <hr style={{ border: 'none', borderTop: '4px solid #aaa', margin: '20px 0', width: '100%', borderRadius: '8px', opacity: 0.5 }} />
+
             <Row className='text-center'>
                 <Col className='d-flex flex-column align-items-center'>
                     {/* Botón para seleccionar materia */}

@@ -31,7 +31,7 @@ const CardProfile = () => {
             <Card.Body>
                 <Row>
 
-                    <Card.Title>Actualizar Perfil</Card.Title>
+                    <Card.Title>Perfil</Card.Title>
                     
                     <Col>
                         <Form onSubmit={handleSubmit(onSubmit)}>

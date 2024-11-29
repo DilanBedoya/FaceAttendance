@@ -195,6 +195,15 @@ export default function Cursos() {
 
 
             } catch (error) {
+             
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.response.data.msg,
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: 'black'
+                });
+               
                 console.log(error);
             }
         }
@@ -283,15 +292,15 @@ export default function Cursos() {
             </div>
             <hr style={{ border: 'none', borderTop: '4px solid #aaa', margin: '20px 0', width: '100%', borderRadius: '8px', opacity: 0.5 }} />
 
-            <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'center', lineHeight: '1.6' }}>
-                Este módulo permite visualizar, agregar, actualizar y eliminar los cursos disponibles.
+            <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'left', lineHeight: '1.6' }}>
+                Este módulo te permite visualizar, agregar, actualizar y eliminar los cursos disponibles.
 
             </h6>
             <hr style={{ border: 'none', borderTop: '4px solid #aaa', margin: '20px 0', width: '100%', borderRadius: '8px', opacity: 0.5 }} />
 
             <Container className="mt-2">
                 <Button variant="dark" className='mb-4' onClick={handleShow}>
-                    Crear Curso
+                    Crear
                 </Button>
                 <div>
                     {/* Input para filtrar por materia */}
@@ -357,7 +366,7 @@ export default function Cursos() {
             {/* Modal para crear curso */}
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Crear Nuevo Curso</Modal.Title>
+                    <Modal.Title>Crear Nuevo</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={handleSubmitCreate(crearCurso)}>
@@ -472,7 +481,7 @@ export default function Cursos() {
                                 Cancelar
                             </Button>
                             <Button variant="primary" type='submit' disabled={semestreSeleccionado == "Seleccione el ciclo académico" || semestreSeleccionado == ''} >
-                                Guardar Curso
+                                Guardar
                             </Button>
                         </Modal.Footer>
                     </Form>
@@ -570,7 +579,7 @@ export default function Cursos() {
                                 Cancelar
                             </Button>
                             <Button variant="primary" type='submit'>
-                                Actualizar Curso
+                                Actualizar
                             </Button>
                         </Modal.Footer>
                     </Form>

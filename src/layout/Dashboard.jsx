@@ -2,6 +2,14 @@ import React, { useEffect } from 'react';
 import { Container, Row, Col, Nav, Navbar, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
+import imagenes from '../components/images'
+
+import { PiStudent } from "react-icons/pi";
+import { SiGoogleclassroom } from "react-icons/si";
+import { MdOutlinePlaylistAddCheck } from "react-icons/md";
+import { CgProfile } from "react-icons/cg";
+import { RiUserAddLine } from "react-icons/ri";
+import { FaRegHandPointUp } from "react-icons/fa6";
 
 //manejar estado del usuario
 import userAuth from '../context/AuthProvider';
@@ -17,12 +25,12 @@ export default function Dashboard() {
 
     return (
         <Container fluid className="p-0">
-            <Row className="min-vh-100 g-0">
-                <Col xs={3} className="bg-dark text-white p-4 " >
+            <Row className="min-vh-100 g-0" >
+                <Col xs={3} className="bg-dark text-white p-4" >
                     <h2 className="text-center">FaceAttendance</h2>
                     <img
 
-                        src="https://cdn-icons-png.flaticon.com/128/9686/9686232.png"
+                        src={`${imagenes.logo}`}
                         alt="img-client"
                         className="m-auto mt-3 p-1 border border-light rounded-circle d-flex flex-column align-items-center"
                         width={120}
@@ -30,29 +38,30 @@ export default function Dashboard() {
 
                     />
                     <div className="text-center mt-3">
-                        Menú de Opciones
+                        <h6>
+                            Menú de Opciones
+                        </h6>
                     </div>
 
                     <hr className="border-light" />
-                    <Nav className="flex-column" style={{ textAlign: 'center' }}>
+                    <Nav className="flex-column" style={{ textAlign: 'left' }}>
                         <Nav.Link as={Link} to="/dashboard" className="text-white">
-                            Perfil
-
+                            <CgProfile /> Perfil
                         </Nav.Link>
                         <Nav.Link as={Link} to="cursos" className="text-white">
-                            Cursos
+                            <SiGoogleclassroom /> Cursos
                         </Nav.Link>
                         <Nav.Link as={Link} to="estudiantes" className="text-white">
-                            Estudiantes
+                            <PiStudent /> Estudiantes
                         </Nav.Link>
                         <Nav.Link as={Link} to="asistencias" className="text-white">
-                            Asistencias
+                            <MdOutlinePlaylistAddCheck />  Asistencias
                         </Nav.Link>
                         <Nav.Link as={Link} to="actuaciones" className="text-white">
-                            Reporte Actuaciones
+                            <FaRegHandPointUp /> Reporte Actuaciones
                         </Nav.Link>
                         <Nav.Link as={Link} to="reportes" className="text-white">
-                            Reporte Asistencias
+                            <RiUserAddLine /> Reporte Asistencias
                         </Nav.Link>
                     </Nav>
                 </Col>

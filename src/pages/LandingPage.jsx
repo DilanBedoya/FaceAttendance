@@ -63,8 +63,8 @@ function LandingPage() {
                 <Container>
                     <h2>¡Empieza hoy mismo!</h2>
                     <p>Únete al sistema de reconocimiento facial más avanzado y seguro para la toma de asistencias.</p>
-                    <Button variant="primary" size="lg" className="mx-2">Registrarse</Button>
-                    <Button variant="outline-light" size="lg">Iniciar Sesión</Button>
+                    <Button variant="primary" size="lg" className="mx-2" onClick={() => { navigate("/register") }}>Registrarse</Button>
+                    <Button variant="outline-light" size="lg" onClick={() => { navigate("/login") }}>Iniciar Sesión</Button>
                 </Container>
             </Container>
 

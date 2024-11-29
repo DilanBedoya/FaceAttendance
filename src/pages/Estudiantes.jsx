@@ -103,18 +103,16 @@ export default function Estudiantes() {
 
                 const token = localStorage.getItem("token")
                 //url del endpoint para el crear curso
-                const url = `${import.meta.env.VITE_URL_BACKEND}/docente/eliminar/estudiante/${id}`
+                const url = `${import.meta.env.VITE_URL_BACKEND}/docente/eliminar/estudiante/${id}?cid=${selectedCourse._id}`
                 const headers = {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`
                 }
 
-                const data = {
-                    "cursoId": selectedCourse._id
-                }
-                console.log(data);
+
+
                 // Hacer la petición POST al backend con token
-                const response = await axios.delete(url, data, { headers });
+                const response = await axios.delete(url, { headers });
 
 
                 //mostrar alerta correcta
@@ -130,6 +128,13 @@ export default function Estudiantes() {
                 listarEstudiantes(selectedCourse);
 
             } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.response.data.msg,
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: 'black'
+                });
                 console.log(error);
             }
         }
@@ -186,17 +191,18 @@ export default function Estudiantes() {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`
             }
-            
 
-            console.log(data.nombre);
-            console.log(data.apellido);
-            console.log(data.cedula);
-            console.log(data.direccion);
-            console.log(data.ciudad);
-            console.log(data.telefono);
+            const body = {
+                "nombre": data.nombre,
+                "apellido": data.apellido,
+                "cedula": data.cedula,
+                "direccion": data.direccion,
+                "ciudad": data.ciudad,
+                "telefono": data.telefono
+            }
 
             // Hacer la petición POST al backend con token
-            const response = await axios.put(url, data, { headers });
+            const response = await axios.put(url, body, { headers });
             console.log(response.data);
 
             //mostrar alerta correcta
@@ -246,8 +252,8 @@ export default function Estudiantes() {
             </div>
             <hr style={{ border: 'none', borderTop: '4px solid #aaa', margin: '20px 0', width: '100%', borderRadius: '8px', opacity: 0.5 }} />
 
-            <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'center', lineHeight: '1.6' }}>
-                Este módulo permite visualizar, editar y eliminar los registros de los
+            <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'left', lineHeight: '1.6' }}>
+                Este módulo te permite visualizar, editar y eliminar los registros de los
                 estudiantes.
 
             </h6>

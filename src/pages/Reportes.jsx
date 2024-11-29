@@ -8,6 +8,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 //manejar estado del usuario
 import userAuth from '../context/AuthProvider';
+import images from '../components/images';
 export default function Reportes() {
 
     const [date, setDate] = useState('');
@@ -48,10 +49,6 @@ export default function Reportes() {
         }
     };
 
-    const handleSubmit = () => {
-        console.log('PDF Generado');
-        alert('PDF generado con éxito');
-    };
     // Función para listar cursos
     const user = userAuth((state) => state.user);
 
@@ -170,7 +167,7 @@ export default function Reportes() {
         // Mostrar el cuadro de confirmación
         const { isConfirmed } = await Swal.fire({
             title: '¡Listo para crear el reporte!',
-            text: `Generaremos el informe para la materia "${selectedCourse.materia + " - " + selectedCourse.paralelo}". ¿Deseas continuar?`,
+            text: `Para la materia "${selectedCourse.materia + " - " + selectedCourse.paralelo}". ¿Deseas continuar?`,
             icon: 'info',
             showCancelButton: true,
             confirmButtonColor: '#4CAF50',
@@ -183,9 +180,19 @@ export default function Reportes() {
             // Generación del PDF
             const doc = new jsPDF();
             const title = isFilteredByDate ? `Reporte de Asistencia por Fecha en ${selectedCourse.materia + " " + selectedCourse.paralelo}` : `Reporte de Asistencia Total en ${selectedCourse.materia + " " + selectedCourse.paralelo}`;
-
-            // Título del PDF
-            doc.text(title, 14, 10);
+            const logoUrl = `${images.logo}`;
+            const imgX = 15;
+            const imgY = 10;
+            const imgWidth = 18;
+            const imgHeight = 18;
+            doc.addImage(logoUrl, "PNG", imgX, imgY, imgWidth, imgHeight);
+            // Agregar título
+            const titleX = doc.internal.pageSize.getWidth() / 2; // Centro de la página
+            const titleY = imgY + imgHeight + 9; // Debajo del logo
+            doc.setFontSize(20);
+            doc.text("FaceAttendance", titleX, imgY + 10, { align: "center" });
+            doc.setFontSize(14);
+            doc.text(title, titleX, titleY, { align: "center" });
 
             let tableColumn, tableRows;
             if (isFilteredByDate) {
@@ -200,7 +207,7 @@ export default function Reportes() {
                 ]);
             } else {
                 // Configuración de columnas y filas para el reporte completo
-                tableColumn = ["#", "Nombre", "Apellido", "Fechas y Estados de Asistencia", "Asistencias", "Ausencias", "Total"];
+                tableColumn = ["#", "Nombre", "Apellido", "Fechas y Estados de Asistencia", "Asistencias durante el semestre", "Ausencias durante el semestre", "Total"];
                 tableRows = filteredStudents.map((estudiante, index) => {
                     const fechasYEstados = estudiante.fechasAsistencias && estudiante.estadosAsistencias
                         ? estudiante.fechasAsistencias.map((fecha, i) => `${fecha}: ${estudiante.estadosAsistencias[i] || ''}`).join('\n')
@@ -210,7 +217,7 @@ export default function Reportes() {
                         index + 1,
                         estudiante.estudiante?.nombre || "",
                         estudiante.estudiante?.apellido || "",
-                        fechasYEstados,
+                        fechasYEstados || 'Sin registros',
                         estudiante.cantidadPresentes || 0,
                         estudiante.cantidadAusencias || 0,
                         estudiante.cantidadAsistencias || 0
@@ -222,29 +229,42 @@ export default function Reportes() {
             doc.autoTable({
                 head: [tableColumn],
                 body: tableRows,
-                startY: 20,
-                styles: { halign: 'center', valign: 'middle' },
+                startY: 42,
+                styles: {
+                    halign: 'center',
+                    valign: 'middle',
+                    fontSize: 10,
+                    fillColor: [220, 230, 241],
+                    textColor: 50
+                },
                 columnStyles: {
                     3: { cellWidth: isFilteredByDate ? 'auto' : 40 },
+                }, headStyles: {
+                    fillColor: [40, 60, 90],
+                    textColor: 255,
+                    fontStyle: "bold",
                 },
+                pageBreak: "auto",
+                margin: { top: 10, bottom: 10 },
             });
 
             // Descarga el PDF
             doc.save(`${selectedCourse.materia + "_" + selectedCourse.paralelo}_reporte_asistencias.pdf`);
         }
     };
+    const today = new Date();  // Fecha actual
+    const formattedDate = today.toLocaleDateString('en-CA', { timeZone: 'America/Guayaquil' });
 
     return (
         <Container>
             <div>
-                <h1 style={{ textAlign: 'center' }}>Reporte Asistencia</h1>
+                <h1 style={{ textAlign: 'center' }}>Reporte Asistencias</h1>
             </div>
             <hr style={{ border: 'none', borderTop: '4px solid #aaa', margin: '20px 0', width: '100%', borderRadius: '8px', opacity: 0.5 }} />
 
-            <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'justify', lineHeight: '1.6' }}>
-                Este módulo permite seleccionar el curso para ver el reporte completo o filtrar por una fecha
-                específica para revisar la asistencia de los estudiantes, además, puede generar un PDF para
-                obtener un reporte detallado, ya sea del total o del filtro aplicado.
+            <h6 style={{ fontSize: '1.1rem', color: '#495057', textAlign: 'left', lineHeight: '1.6' }}>
+                Este módulo te permite
+                obtener el reporte de asistencias en PDF, ya sea del total o del filtro aplicado.
             </h6>
             <hr style={{ border: 'none', borderTop: '4px solid #aaa', margin: '20px 0', width: '100%', borderRadius: '8px', opacity: 0.5 }} />
 
@@ -261,7 +281,7 @@ export default function Reportes() {
                 <Col className='d-flex flex-column align-items-center'>
                     <Form.Group controlId="date">
                         <Form.Label><strong>Filtrar por Fecha</strong></Form.Label>
-                        <Form.Control type="date" value={date} onChange={handleDateChange} style={{ width: '150px' }} />
+                        <Form.Control max={formattedDate} type="date" value={date} onChange={handleDateChange} style={{ width: '150px' }} />
                     </Form.Group>
                     <Button onClick={FiltrarEstudianteFecha} variant="outline-dark" style={{ marginTop: '10px' }}>Buscar</Button>
                 </Col>
