@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Container, Row, Col, Nav, Navbar, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
@@ -23,76 +23,49 @@ export default function Dashboard() {
     const logout = userAuth((state) => state.logout);
 
 
-
-    const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
     return (
         <Container fluid className="p-0">
             <Row className="min-vh-100 g-0">
                 {/* Sidebar */}
-                <Col
-                    xs={isSidebarCollapsed ? 1 : 3}
-                    className={`bg-dark text-white p-4 ${isSidebarCollapsed ? "text-center" : ""}`}
-                    style={{
-                        position: 'sticky',
-                        top: 0,
-                        height: '100vh',
-                        overflowY: 'auto',
-                    }}
-                >
-                    <div className="d-flex flex-column align-items-center">
-                        <h2 className={isSidebarCollapsed ? 'd-none' : 'text-center'}>FaceAttendance</h2>
-                        <img
-                            src={`${imagenes.logo}`}
-                            alt="img-client"
-                            className="m-auto mt-3 p-1 border border-light rounded-circle"
-                            width={isSidebarCollapsed ? 50 : 120}
-                            height={isSidebarCollapsed ? 50 : 120}
-                        />
+                <Col xs={3} className="bg-dark text-white p-4" style={{ position: 'sticky', top: 0, height: '100vh', overflowY: 'auto' }}>
+                    <h2 className="text-center">FaceAttendance</h2>
+                    <img
+                        src={`${imagenes.logo}`}
+                        alt="img-client"
+                        className="m-auto mt-3 p-1 border border-light rounded-circle d-flex flex-column align-items-center"
+                        width={120}
+                        height={120}
+                    />
+                    <div className="text-center mt-3">
+                        <h6>Menú de Opciones</h6>
                     </div>
-                    {!isSidebarCollapsed && (
-                        <>
-                            <div className="text-center mt-3">
-                                <h6>Menú de Opciones</h6>
-                            </div>
-                            <hr className="border-light" />
-                            <Nav className="flex-column" style={{ textAlign: 'left' }}>
-                                <Nav.Link as={Link} to="/dashboard" className="text-white">
-                                    <CgProfile /> Perfil
-                                </Nav.Link>
-                                <Nav.Link as={Link} to="cursos" className="text-white">
-                                    <SiGoogleclassroom /> Cursos
-                                </Nav.Link>
-                                <Nav.Link as={Link} to="estudiantes" className="text-white">
-                                    <PiStudent /> Estudiantes
-                                </Nav.Link>
-                                <Nav.Link as={Link} to="asistencias" className="text-white">
-                                    <MdOutlinePlaylistAddCheck /> Asistencias
-                                </Nav.Link>
-                                <Nav.Link as={Link} to="actuaciones" className="text-white">
-                                    <FaRegHandPointUp /> Reporte Actuaciones
-                                </Nav.Link>
-                                <Nav.Link as={Link} to="reportes" className="text-white">
-                                    <RiUserAddLine /> Reporte Asistencias
-                                </Nav.Link>
-                            </Nav>
-                        </>
-                    )}
+                    <hr className="border-light" />
+                    <Nav className="flex-column" style={{ textAlign: 'left' }}>
+                        <Nav.Link as={Link} to="/dashboard" className="text-white">
+                            <CgProfile /> Perfil
+                        </Nav.Link>
+                        <Nav.Link as={Link} to="cursos" className="text-white">
+                            <SiGoogleclassroom /> Cursos
+                        </Nav.Link>
+                        <Nav.Link as={Link} to="estudiantes" className="text-white">
+                            <PiStudent /> Estudiantes
+                        </Nav.Link>
+                        <Nav.Link as={Link} to="asistencias" className="text-white">
+                            <MdOutlinePlaylistAddCheck /> Asistencias
+                        </Nav.Link>
+                        <Nav.Link as={Link} to="actuaciones" className="text-white">
+                            <FaRegHandPointUp /> Reporte Actuaciones
+                        </Nav.Link>
+                        <Nav.Link as={Link} to="reportes" className="text-white">
+                            <RiUserAddLine /> Reporte Asistencias
+                        </Nav.Link>
+                    </Nav>
                 </Col>
 
                 {/* Main Content */}
-                <Col
-                    xs={isSidebarCollapsed ? 11 : 9}
-                    className="d-flex flex-column"
-                >
+                <Col xs={9} className="d-flex flex-column">
                     {/* Header */}
                     <Navbar bg="dark" variant="dark" sticky="top" className="w-100">
-                        <Button
-                            variant="outline-light"
-                            className="me-3"
-                            onClick={() => setSidebarCollapsed(!isSidebarCollapsed)}
-                        >
-                            {isSidebarCollapsed ? '>' : '<'}
-                        </Button>
                         <Navbar.Text className="ms-auto me-2">
                             <span
                                 className="bg-success rounded-circle"
@@ -113,6 +86,7 @@ export default function Dashboard() {
                             variant="outline-danger"
                             className="me-3"
                             onClick={() => {
+                                // Eliminar el token y el manejo del usuario de la localStorage
                                 logout();
                                 localStorage.removeItem('token');
                                 navigate("/login");
