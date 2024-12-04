@@ -7,7 +7,7 @@ import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import RecoverPassword from './pages/RecoverPassword';
-import NotFound from './pages/notFound';
+import NotFound from './pages/NotFound';
 import Dashboard from './layout/Dashboard';
 import Perfil from './pages/Perfil';
 import Actuaciones from './pages/Actuaciones';
