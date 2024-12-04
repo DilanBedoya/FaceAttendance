@@ -25,24 +25,20 @@ export default function Dashboard() {
 
     return (
         <Container fluid className="p-0">
-            <Row className="min-vh-100 g-0" >
-                <Col xs={3} className="bg-dark text-white p-4" >
+            <Row className="min-vh-100 g-0">
+                {/* Sidebar */}
+                <Col xs={3} className="bg-dark text-white p-4" style={{ position: 'sticky', top: 0, height: '100vh', overflowY: 'auto' }}>
                     <h2 className="text-center">FaceAttendance</h2>
                     <img
-
                         src={`${imagenes.logo}`}
                         alt="img-client"
                         className="m-auto mt-3 p-1 border border-light rounded-circle d-flex flex-column align-items-center"
                         width={120}
                         height={120}
-
                     />
                     <div className="text-center mt-3">
-                        <h6>
-                            Menú de Opciones
-                        </h6>
+                        <h6>Menú de Opciones</h6>
                     </div>
-
                     <hr className="border-light" />
                     <Nav className="flex-column" style={{ textAlign: 'left' }}>
                         <Nav.Link as={Link} to="/dashboard" className="text-white">
@@ -55,7 +51,7 @@ export default function Dashboard() {
                             <PiStudent /> Estudiantes
                         </Nav.Link>
                         <Nav.Link as={Link} to="asistencias" className="text-white">
-                            <MdOutlinePlaylistAddCheck />  Asistencias
+                            <MdOutlinePlaylistAddCheck /> Asistencias
                         </Nav.Link>
                         <Nav.Link as={Link} to="actuaciones" className="text-white">
                             <FaRegHandPointUp /> Reporte Actuaciones
@@ -69,13 +65,13 @@ export default function Dashboard() {
                 {/* Main Content */}
                 <Col xs={9} className="d-flex flex-column">
                     {/* Header */}
-                    <Navbar bg="dark" variant="dark" sticky="top">
-
+                    <Navbar bg="dark" variant="dark" sticky="top" className="w-100">
                         <Navbar.Text className="ms-auto me-2">
-                            <span className="bg-success rounded-circle" style={{ width: '10px', height: '10px', display: 'inline-block' }}></span>
-
+                            <span
+                                className="bg-success rounded-circle"
+                                style={{ width: '10px', height: '10px', display: 'inline-block' }}
+                            ></span>
                             Docente - {user?.nombre + " " + user?.apellido}
-
                         </Navbar.Text>
                         <Navbar.Brand>
                             <img
@@ -86,13 +82,16 @@ export default function Dashboard() {
                                 height={50}
                             />
                         </Navbar.Brand>
-                        <Button variant="outline-danger" className="me-3" onClick={() => {
-                            //Eliminar el token y el manejo del usuario de la localStorage
-                            logout()
-                            localStorage.removeItem('token');
-                            navigate("/login")
-
-                        }}>
+                        <Button
+                            variant="outline-danger"
+                            className="me-3"
+                            onClick={() => {
+                                // Eliminar el token y el manejo del usuario de la localStorage
+                                logout();
+                                localStorage.removeItem('token');
+                                navigate("/login");
+                            }}
+                        >
                             Salir
                         </Button>
                     </Navbar>
@@ -101,11 +100,10 @@ export default function Dashboard() {
                     <div className="flex-grow-1 overflow-auto p-4 bg-light">
                         <Outlet />
                     </div>
-
-
                 </Col>
             </Row>
         </Container>
+
     );
 };
 

@@ -195,7 +195,7 @@ export default function Cursos() {
 
 
             } catch (error) {
-             
+
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -203,7 +203,7 @@ export default function Cursos() {
                     confirmButtonText: 'OK',
                     confirmButtonColor: 'black'
                 });
-               
+
                 console.log(error);
             }
         }
@@ -477,12 +477,13 @@ export default function Cursos() {
                         {errorsCreate.semestre && <span style={{ color: 'red', fontSize: '0.8rem' }}>{errorsCreate.semestre.message}</span>}
 
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={handleClose} >
-                                Cancelar
-                            </Button>
                             <Button variant="primary" type='submit' disabled={semestreSeleccionado == "Seleccione el ciclo académico" || semestreSeleccionado == ''} >
                                 Guardar
                             </Button>
+                            <Button variant="secondary" onClick={handleClose} >
+                                Cancelar
+                            </Button>
+
                         </Modal.Footer>
                     </Form>
                 </Modal.Body>
@@ -575,12 +576,13 @@ export default function Cursos() {
                         {errorsUpdate.semestre && <span style={{ color: 'red', fontSize: '0.8rem' }}>{errorsUpdate.semestre.message}</span>}
 
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={handleCloseUpdate}>
-                                Cancelar
-                            </Button>
                             <Button variant="primary" type='submit'>
                                 Actualizar
                             </Button>
+                            <Button variant="secondary" onClick={handleCloseUpdate}>
+                                Cancelar
+                            </Button>
+
                         </Modal.Footer>
                     </Form>
                 </Modal.Body>

@@ -6,6 +6,7 @@ import jsPDF from 'jspdf';
 import { BiCommentDetail } from "react-icons/bi";
 import axios from 'axios';
 import userAuth from '../context/AuthProvider';
+import images from '../components/images';
 export default function Actuaciones() {
     const user = userAuth((state) => state.user);
     const [cursos, setCursos] = useState([]); // Estado para almacenar los cursos
@@ -97,34 +98,12 @@ export default function Actuaciones() {
     };
 
 
-    const generatePDF = async () => {
-        // Validación de curso y estudiantes
-        if (!selectedCourse) {
-            await Swal.fire({
-                title: 'Error',
-                text: 'Por favor, selecciona un curso para generar el reporte.',
-                icon: 'question',
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'Aceptar'
-            });
-            return;
-        }
-
-        if (!filteredStudents || filteredStudents.length === 0) {
-            await Swal.fire({
-                title: 'Error',
-                text: 'No hay estudiantes en el curso seleccionado para generar el reporte.',
-                icon: 'question',
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'Aceptar'
-            });
-            return;
-        }
+    const generatePDF = async (student) => {
 
         // Mostrar el cuadro de confirmación
         const { isConfirmed } = await Swal.fire({
             title: '¡Listo para crear el reporte!',
-            text: `Para la materia "${selectedCourse.materia + " - " + selectedCourse.paralelo}". ¿Deseas continuar?`,
+            text: `Para la estudiante "${student.estudiante.nombre} ${student.estudiante.apellido}". ¿Deseas continuar?`,
             icon: 'info',
             showCancelButton: true,
             confirmButtonColor: '#4CAF50',
@@ -134,17 +113,76 @@ export default function Actuaciones() {
         });
 
         if (isConfirmed) {
-            // Generación del PDF
             const doc = new jsPDF();
-            const title = `Reporte de Actuaciones en ${selectedCourse.materia + " " + selectedCourse.paralelo}`;
 
             // Título del PDF
-            doc.text(title, 14, 10);
+            const logoUrl = `${images.logo}`;
+            const imgX = 15;
+            const imgY = 10;
+            const imgWidth = 18;
+            const imgHeight = 18;
+            doc.addImage(logoUrl, "PNG", imgX, imgY, imgWidth, imgHeight);
 
+            // Agregar título
+            const titleX = doc.internal.pageSize.getWidth() / 2; // Centro de la página
+            const titleY = imgY + imgHeight + 5; // Debajo del logo, más cerca
+            doc.setFontSize(20);
+            doc.text("FaceAttendance", titleX, imgY + 10, { align: "center" });
 
-            // Descarga el PDF
-            doc.save(`${selectedCourse.materia + "_" + selectedCourse.paralelo}_reporte_actuaciones.pdf`);
+            // Subtítulos
+            doc.setFontSize(15);
+            doc.text("Reporte de Actuaciones", 10, titleY + 2); // Ajustado para estar más cerca
+            doc.setFontSize(14);
+            doc.text(`Estudiante: ${student.estudiante.nombre} ${student.estudiante.apellido}`, 10, titleY + 10);
+
+            // Espacio antes de las actuaciones
+            let currentY = titleY + 18;
+
+            // Validar si hay actuaciones
+            if (student.descripciones.length > 0 && student.fecha_actuaciones.length > 0) {
+                const groupedData = [];
+
+                // Agrupar actuaciones por fecha
+                student.fecha_actuaciones.forEach((fecha, index) => {
+                    const descripciones = student.descripciones[index];
+                    if (descripciones && descripciones.length > 0) {
+                        groupedData.push({
+                            fecha,
+                            descripciones,
+                        });
+                    }
+                });
+
+                // Construir contenido del PDF
+                groupedData.forEach(({ fecha, descripciones }) => {
+                    doc.setFontSize(12);
+                    doc.text(`Fecha: ${fecha}`, 10, currentY); // Ajustar posición de la fecha
+
+                    currentY += 10; // Espacio después de la fecha
+
+                    const data = descripciones.map((descripcion) => [descripcion]);
+
+                    doc.autoTable({
+                        head: [["Descripción"]],
+                        body: data,
+                        startY: currentY - 6, // Establecer la posición de inicio de la tabla
+                        margin: { top: 5, left: 10, right: 10, bottom: 5 },
+                        theme: "grid",
+                        pageBreak: "auto",
+                    });
+
+                    currentY = doc.lastAutoTable.finalY + 10; // Ajustar la posición después de la tabla
+                });
+            } else {
+                // Mensaje en caso de no tener actuaciones
+                doc.setFontSize(12);
+                doc.text("No hay actuaciones disponibles.", 10, currentY);
+            }
+
+            // Guardar PDF
+            doc.save(`Reporte_Actuaciones_${student.estudiante.nombre}_${student.estudiante.apellido}.pdf`);
         }
+
     };
 
     return (
@@ -286,9 +324,19 @@ export default function Actuaciones() {
                 </Modal.Body>
 
                 <Modal.Footer>
+                    <Button variant="primary" onClick={() => generatePDF(selectedStudent)} disabled={
+                        !selectedStudent?.descripciones?.length || // No hay descripciones
+                        !selectedStudent?.fecha_actuaciones?.length || // No hay fechas de actuaciones
+                        selectedStudent.descripciones.every(descripciones => descripciones.length === 0) // Todas las descripciones están vacías
+                    }>
+                        Generar PDF
+                    </Button>
                     <Button variant="secondary" onClick={handleCloseModal}>
                         Cerrar
                     </Button>
+
+
+
                 </Modal.Footer>
             </Modal>
 

@@ -466,12 +466,13 @@ export default function Estudiantes() {
 
 
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={handleCloseUpdate}>
-                                Cancelar
-                            </Button>
                             <Button variant="primary" type='submit'>
                                 Actualizar
                             </Button>
+                            <Button variant="secondary" onClick={handleCloseUpdate}>
+                                Cancelar
+                            </Button>
+
                         </Modal.Footer>
                     </Form>
                 </Modal.Body>
