@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import RecoverPassword from './pages/recoverPassword';
+import RecoverPassword from './pages/RecoverPassword';
 import NotFound from './pages/notFound';
 import Dashboard from './layout/Dashboard';
 import Perfil from './pages/Perfil';
