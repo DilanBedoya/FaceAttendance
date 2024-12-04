@@ -158,6 +158,7 @@ export default function Asistencias() {
         estudiante.estudiante.nombre.toLowerCase().includes(filter.toLowerCase()) ||
         estudiante.estudiante.apellido.toLowerCase().includes(filter.toLowerCase())
     );
+    console.log(filteredStudents);
 
 
     //funcionalidad fecha
