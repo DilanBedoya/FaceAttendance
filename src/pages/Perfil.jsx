@@ -1,6 +1,6 @@
 
 import React from 'react';
-import CardProfile from '../components/cardProfile';
+import CardProfile from '../components/CardProfile';
 
 
 export default function Perfil() {
