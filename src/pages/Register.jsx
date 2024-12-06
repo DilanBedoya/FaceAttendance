@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 
 import imagenes from '../components/images'
@@ -54,7 +54,6 @@ export default function Register() {
         }
     };
 
-
     return (
         <>
             {/* Barra de navegación */}
@@ -92,6 +91,9 @@ export default function Register() {
                                                 required: {
                                                     value: true,
                                                     message: "Nombre es requerido"
+                                                }, pattern: {
+                                                    value: /^[A-Za-z\s]+$/i,
+                                                    message: "Solo se permiten letras y espacios",
                                                 },
 
                                             })}
@@ -110,6 +112,9 @@ export default function Register() {
                                                 required: {
                                                     value: true,
                                                     message: "Apellido es requerido"
+                                                }, pattern: {
+                                                    value: /^[A-Za-z\s]+$/i, // Expresión regular que permite solo letras y espacios
+                                                    message: "Solo se permiten letras y espacios",
                                                 },
 
                                             })}
@@ -129,6 +134,9 @@ export default function Register() {
                                                 required: {
                                                     value: true,
                                                     message: "Ciudad es requerido"
+                                                }, pattern: {
+                                                    value: /^[A-Za-z\s]+$/i,
+                                                    message: "Solo se permiten letras y espacios",
                                                 },
 
                                             })}
@@ -182,6 +190,7 @@ export default function Register() {
                                 <Form.Group controlId="formBasicPassword">
                                     <Form.Label>Contraseña</Form.Label>
                                     <Form.Control type='text' placeholder="Ingresa una contraseña" className={errors.password ? 'is-invalid mb-1' : 'mb-1'}
+
                                         {...register('password', {
                                             required: {
                                                 value: true,

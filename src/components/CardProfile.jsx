@@ -5,7 +5,7 @@ import userAuth from '../context/AuthProvider';
 import imagenes from '../components/images'
 
 const CardProfile = () => {
-    const { register, handleSubmit, reset } = useForm();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const { user, updateProfile } = userAuth();
 
     // Efect para llenar el formulario con los datos del usuario al cargar
@@ -27,12 +27,12 @@ const CardProfile = () => {
 
     return (
         <Card className="m-3">
-            
+
             <Card.Body>
                 <Row>
 
                     <Card.Title>Perfil</Card.Title>
-                    
+
                     <Col>
                         <Form onSubmit={handleSubmit(onSubmit)}>
                             {/* Campo oculto para el ID */}
@@ -40,23 +40,44 @@ const CardProfile = () => {
 
                             <Form.Group controlId="firstName">
                                 <Form.Label>Nombre:</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    {...register('nombre', { required: true })}
+                                <Form.Control type="text" placeholder="Ingresa tu nombre" className={errors.nombre ? 'is-invalid mb-1' : 'mb-1'}
+                                    {...register('nombre', {
+                                        required: true,
+                                        pattern: {
+                                            value: /^[A-Za-z\s]+$/i,
+                                            message: "Solo se permiten letras y espacios",
+                                        },
+                                    })}
                                 />
                             </Form.Group>
+                            {errors.nombre && <span style={{ color: 'red', fontSize: '0.8rem' }}>{errors.nombre.message}</span>}
+
                             <Form.Group controlId="lastName">
                                 <Form.Label>Apellido:</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    {...register('apellido', { required: true })}
+                                <Form.Control type="text" placeholder="Ingresa tu apellido" className={errors.apellido ? 'is-invalid mb-1' : 'mb-1'}
+
+                                    {...register('apellido', {
+                                        required: true,
+                                        pattern: {
+                                            value: /^[A-Za-z\s]+$/i,
+                                            message: "Solo se permiten letras y espacios",
+                                        },
+                                    })}
                                 />
                             </Form.Group>
+                            {errors.apellido && <span style={{ color: 'red', fontSize: '0.8rem' }}>{errors.apellido.message}</span>}
+
                             <Form.Group controlId="city">
                                 <Form.Label>Ciudad:</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    {...register('ciudad', { required: true })}
+                                    {...register('ciudad', {
+                                        required: true,
+                                        pattern: {
+                                            value: /^[A-Za-z\s]+$/i,
+                                            message: "Solo se permiten letras y espacios",
+                                        },
+                                    })}
                                 />
                             </Form.Group>
                             <Form.Group controlId="direccion">

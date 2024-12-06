@@ -75,6 +75,8 @@ export default function Asistencias() {
 
     //funcion para registrar la asistencia (Guardar)
     const handleSubmit = async (curso, date, asistencias) => {
+
+
         // Validación de curso y estudiantes
         if (!selectedCourse) {
             await Swal.fire({
@@ -86,6 +88,17 @@ export default function Asistencias() {
             });
             return;
         }
+
+        if (!filteredStudents || filteredStudents.length === 0) {
+            await Swal.fire({
+                title: 'Error',
+                text: 'No existe registro de estudiantes',
+                icon: 'question',
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            });
+            return;
+        }   
 
         // Validación de fecha no seleccionada
         if (!date) {
@@ -223,7 +236,7 @@ export default function Asistencias() {
         formData.append('semestre', selectedCourse.semestre);
         formData.append('paralelo', selectedCourse.paralelo);
         console.log("Contenido de FormData:");
-        for (let [key, value] of formData.entries()) {  
+        for (let [key, value] of formData.entries()) {
             console.log(key, value);
         }
 
