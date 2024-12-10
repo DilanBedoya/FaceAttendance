@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Container, Row, Col, Form, Button, Table, Dropdown, DropdownButton } from 'react-bootstrap';
 import userAuth from '../context/AuthProvider';
 import Swal from 'sweetalert2';
-
+import '../styles/asistencias.css'
 
 export default function Asistencias() {
 
@@ -76,7 +76,6 @@ export default function Asistencias() {
     //funcion para registrar la asistencia (Guardar)
     const handleSubmit = async (curso, date, asistencias) => {
 
-
         // Validación de curso y estudiantes
         if (!selectedCourse) {
             await Swal.fire({
@@ -98,7 +97,7 @@ export default function Asistencias() {
                 confirmButtonText: 'Aceptar'
             });
             return;
-        }   
+        }
 
         // Validación de fecha no seleccionada
         if (!date) {
@@ -112,14 +111,18 @@ export default function Asistencias() {
             return;
         }
 
+
         const [year, month, day] = date.split("-");
         const formattedDate = `${day}/${month}/${year}`;
 
-        console.log(curso);
-        console.log(formattedDate);
-        console.log(asistencias);
+
+        console.log("Curso", curso);
+        console.log("Fecha", formattedDate);
+        console.log("asistencias", asistencias);
 
         try {
+            
+
             const token = localStorage.getItem("token");
             const url = `${import.meta.env.VITE_URL_BACKEND}/asistencia/actualizar`;
 
@@ -149,7 +152,7 @@ export default function Asistencias() {
                 confirmButtonColor: 'black'
             });
             console.log(response.data);
-
+            setSelectedCourse(null)
         } catch (error) {
             console.log(error);
             Swal.fire({
@@ -192,6 +195,22 @@ export default function Asistencias() {
     const [recognitionResult, setRecognitionResult] = useState('');
     const [showModal, setShowModal] = useState(false);
 
+    const handleOpenModal = async () => {
+        // Validación de curso y estudiantes
+        if (!selectedCourse) {
+            await Swal.fire({
+                title: 'Error',
+                text: 'Por favor, selecciona un curso para registrar la asistencia',
+                icon: 'question',
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            });
+            return;
+        }
+
+        setShowModal(true); // Abre el modal si el curso está seleccionado
+    };
+
     useEffect(() => {
         if (showModal) {
             const startCamera = async () => {
@@ -213,32 +232,88 @@ export default function Asistencias() {
         };
     }, [showModal]);
 
+    const [isLoading, setIsLoading] = useState(false); // Para manejar la carga
+    const [recognitionStatus, setRecognitionStatus] = useState(null); // "recognized" o "not_recognized"
+    const [recognizedName, setRecognizedName] = useState("");
+    const [isCapturing, setIsCapturing] = useState(false); // Estado para controlar la captura automática
+    const timeoutRef = useRef(null); // Referencia para limpiar el timeout
+    const isCapturingRef = useRef(isCapturing);
+    useEffect(() => {
+        // Sincroniza el valor de isCapturing con el ref
+        isCapturingRef.current = isCapturing;
+    }, [isCapturing]);
+
+    const handleStartCapture = () => {
+        setIsCapturing(true); // Cambia explícitamente el estado a false
+        console.log("Captura iniciada");
+    };
+    const handleStopCapture = () => {
+        setIsCapturing(false); // Cambia explícitamente el estado a false
+        console.log("Captura detenida");
+    };
+
     const captureImage = () => {
+
+        if (!isCapturingRef.current) {
+            console.log("Captura detenida, no se ejecuta");
+            return; // Si está detenido, no hace nada
+        }
+        console.log('capturando imagen');
+        setIsLoading(true); // Inicia el proceso de carga
+        setRecognitionStatus(null); // Resetea el estado previo
+
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
         canvas.width = videoRef.current.videoWidth;
         canvas.height = videoRef.current.videoHeight;
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
         canvas.toBlob((blob) => {
             setCapturedImage(blob);
-            sendImageToBackend(blob, selectedCourse);
+
+            // Simula el envío al backend y espera la respuesta
+            sendImageToBackend(blob, selectedCourse, filteredStudents).then(() => {
+                setIsLoading(false);
+
+                // Configura el próximo disparo 3 segundos después de obtener la respuesta
+                timeoutRef.current = setTimeout(() => {
+                    captureImage();
+                }, 3000);
+            }).catch(() => {
+                setIsLoading(false);
+
+                // Asegura reintentar después de 3 segundos incluso en caso de error
+                timeoutRef.current = setTimeout(() => {
+                    captureImage();
+                }, 3000);
+            });
         }, 'image/jpeg');
     };
 
-    const sendImageToBackend = async (blob, selectedCourse) => {
-        const formData = new FormData();
-        console.log(blob);
-        console.log('curso seleccionado IA: ', selectedCourse);
+    // Limpia el timeout cuando se detiene la captura o el componente se desmonta
+    useEffect(() => {
+        if (!isCapturing && timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+        }
 
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, [isCapturing]);
+
+    const sendImageToBackend = async (blob, selectedCourse, students) => {
+        setIsLoading(true); // Inicia el proceso de carga
+        setRecognitionStatus(null); // Resetea el estado previo
+        setRecognizedName(null); // Resetea el nombre reconocido
+
+        const formData = new FormData();
         formData.append('image', blob);
-        // Agregar los detalles del curso
         formData.append('materia', selectedCourse.materia);
         formData.append('semestre', selectedCourse.semestre);
         formData.append('paralelo', selectedCourse.paralelo);
-        console.log("Contenido de FormData:");
-        for (let [key, value] of formData.entries()) {
-            console.log(key, value);
-        }
 
         const url = `${import.meta.env.VITE_URL_BACKEND}/asistencia/reconocimiento-facial`;
 
@@ -247,12 +322,32 @@ export default function Asistencias() {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
-            }
-            );
+            });
 
-            setRecognitionResult(response.data.message);
+            // Verificar si se ha reconocido un rostro
+            const recognizedName = response.data.coincidencia; // Suponemos que el backend devuelve el nombre
+            console.log("Coincidencia log:", recognizedName);
+
+            if (recognizedName) {
+                // Busca el estudiante en la lista utilizando el nombre reconocido
+                const studentId = findStudentIdByName(students, recognizedName);
+
+                if (studentId) {
+                    setRecognitionStatus("recognized"); // Si se reconoce al estudiante, se actualiza el estado
+                    setRecognizedName(recognizedName); // Muestra el nombre del estudiante reconocido
+                    handleAttendanceChange(studentId, 'presente'); // Cambia el estado de asistencia del estudiante
+                } else {
+                    console.warn('Estudiante no encontrado:', recognizedName);
+                    setRecognitionStatus("not_recognized"); // Si no se encuentra el estudiante en la lista
+                }
+            } else {
+                setRecognitionStatus("not_recognized"); // Si no hay coincidencia
+            }
         } catch (error) {
             console.error('Error en el reconocimiento facial:', error);
+            setRecognitionStatus("error"); // Si ocurre un error durante la petición
+        } finally {
+            setIsLoading(false); // Detiene el spinner de carga
         }
     };
 
@@ -268,6 +363,38 @@ export default function Asistencias() {
         }));
     };
     console.log("Datos de asistencia:", attendance);
+
+
+    // Función para encontrar el ID del estudiante a partir del nombre
+    const findStudentIdByName = (students, fullName) => {
+        if (!Array.isArray(students)) {
+            console.error('Error: la lista de estudiantes no es válida', students);
+            return null;
+        }
+
+        // Normaliza los nombres para la comparación (quita espacios y hace todo minúscula)
+        const normalizeString = str => str.trim().toLowerCase();
+
+        const normalizedFullName = normalizeString(fullName);
+
+        // Construye el nombre completo de cada estudiante y lo normaliza para comparar
+        const student = students.find(student => {
+            const studentFullName = `${student.estudiante.nombre} ${student.estudiante.apellido}`;
+            console.log(studentFullName);
+            return normalizeString(studentFullName) === normalizedFullName;
+        });
+
+        return student ? student.estudiante._id : null; // Retorna el ID si lo encuentra, o null si no
+    };
+
+    useEffect(() => {
+        console.log("UseEffect capturing", isCapturing);
+        if (!isCapturing) {
+            return; // No hace nada si isCapturing es falso
+        }
+
+        captureImage(); // Llama al primer reconocimiento inmediatamente
+    }, [isCapturing]); // Escucha cambios en isCapturing
 
     return (
         <Container>
@@ -375,7 +502,7 @@ export default function Asistencias() {
 
             <div className="d-flex justify-content-between">
                 <div className="text-start">
-                    <Button variant="outline-dark" onClick={() => setShowModal(true)}>Registrar Asistencia</Button>
+                    <Button variant="outline-dark" onClick={() => handleOpenModal()}>Registrar Asistencia</Button>
 
                 </div>
                 <div className="text-end">
@@ -398,37 +525,67 @@ export default function Asistencias() {
                                     autoPlay
                                     style={{
                                         width: '100%',
-                                        maxWidth: '800px',
+                                        maxWidth: '1200px',
                                         height: 'auto',
                                         border: '2px solid #007bff',
                                         borderRadius: '8px',
                                     }}
                                 ></video>
-                                {recognitionResult && (
-                                    <p
-                                        style={{
-                                            marginTop: '15px',
-                                            fontSize: '18px',
-                                            color: 'green',
-                                            fontWeight: 'bold',
-                                        }}
-                                    >
-                                        Resultado: {recognitionResult}
-                                    </p>
+
+                                {/* Contenido según el estado */}
+                                {isLoading ? (
+                                    <div className="spinner-container">
+                                        <p>Verificando rostro, por favor espere...</p>
+                                        <div className="spinner"></div> {/* Spinner visual */}
+                                    </div>
+                                ) : !isCapturing ? ( // Mostrar mensaje "Detenido" si no está capturando
+                                    <p>Detenido</p>
+                                ) : recognitionStatus === "recognized" ? (
+                                    <div style={{ color: "green", textAlign: "center" }}>
+                                        <p>¡Rostro reconocido con éxito!</p>
+                                        <p><strong>{recognizedName}</strong></p>
+                                        <p>Estado: Presente</p>
+                                    </div>
+                                ) : recognitionStatus === "not_recognized" ? (
+                                    <div style={{ color: "red", textAlign: "center" }}>
+                                        <p>No se pudo reconocer el rostro.</p>
+                                    </div>
+                                ) : recognitionStatus === "error" ? (
+                                    <div style={{ color: "red", textAlign: "center" }}>
+                                        <p>Rostro no reconocido</p>
+                                    </div>
+                                ) : (
+                                    <p>Esperando rostro...</p>
                                 )}
+
                             </div>
+
                             <div className="modal-footer">
-                                <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                                {!isCapturing ? (
+                                    <button
+                                        className="btn btn-success"
+                                        onClick={() => handleStartCapture()} // Inicia la captura automática
+                                    >
+                                        Comenzar Reconocimiento Facial
+                                    </button>
+                                ) : (
+                                    <button
+                                        className="btn btn-danger"
+                                        onClick={() => handleStopCapture()} // Detener la captura automática
+                                    >
+                                        Detener
+                                    </button>
+                                )}
+
+                                <button disabled={isLoading} className="btn btn-secondary" onClick={() => setShowModal(false)}>
                                     Cerrar
-                                </button>
-                                <button className="btn btn-success" onClick={captureImage}>
-                                    Capturar Imagen
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
             )}
+
         </Container>
     );
 };

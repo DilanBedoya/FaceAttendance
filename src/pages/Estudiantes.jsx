@@ -17,6 +17,7 @@ export default function Estudiantes() {
     const [cursos, setCursos] = useState([]); // Estado para almacenar los cursos
     const [selectedCourse, setSelectedCourse] = useState(null); // Estado para almacenar el curso seleccionado
     const [students, setStudents] = useState([]); // Estado para almacenar los estudiantes del curso seleccionado
+    const [imagen, setImage] = useState(""); // Estado para almacenar los estudiantes del curso seleccionado
 
 
 
@@ -62,6 +63,8 @@ export default function Estudiantes() {
             // Hacer la petición POST al backend para obtener los estudiantes
             const response = await axios.post(url, data, { headers });
             setStudents(response.data); // Guardar los estudiantes en el estado
+
+
             console.log(response.data);
 
         } catch (error) {
@@ -156,8 +159,9 @@ export default function Estudiantes() {
 
             // Hacer la petición POST al backend con token
             const response = await axios.get(url, { headers });
-            console.log(response.data);
-
+            // console.log(response.data);
+            console.log(response.data.fotografia);
+            setImage(response.data.fotografia)
             handleShowUpdate()
             resetUpdate(response.data)
 
@@ -360,8 +364,22 @@ export default function Estudiantes() {
             <Modal show={showUpdate} onHide={handleCloseUpdate}>
                 <Modal.Header closeButton>
                     <Modal.Title>Actualizar Estudiante</Modal.Title>
+
                 </Modal.Header>
+
                 <Modal.Body>
+                    <div className="d-flex justify-content-center">
+                        <img
+                            src={`${imagen}`}
+                            alt="Fotografía"
+                            className="img-fluid rounded-circle shadow"
+                            style={{
+                                width: '150px',
+                                height: '150px',
+                                objectFit: 'cover',
+                            }}
+                        />
+                    </div>
                     <Form onSubmit={handleSubmitUpdate(actualizarEstudiante)}>
                         <Form.Group controlId="formStudentName">
                             <Form.Label>Nombre</Form.Label>
