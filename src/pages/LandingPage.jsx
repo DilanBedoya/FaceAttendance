@@ -36,7 +36,7 @@ function LandingPage() {
                 <Row className="text-center mb-5">
                     <Col>
                         <h2>Características del Sistema</h2>
-                        <p>Descubre los beneficios de utilizar FaceAttendance</p>
+                        <p>Descubre los beneficios de utilizar FaceAttendance.</p>
                     </Col>
                 </Row>
                 <Row>
