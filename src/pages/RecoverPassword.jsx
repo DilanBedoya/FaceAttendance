@@ -86,10 +86,10 @@ export default function RecoverPassword() {
                                             },
                                             //Validar luego para el correo
 
-                                            // pattern: {
-                                            //     value: /^[a-z0-9._%+-]+@epn\.edu\.ec$/,
-                                            //     message: "El correo debe ser institucional - @epn.edu.ec"
-                                            // }
+                                            pattern: {
+                                                value: /^[a-z0-9._%+-]+@epn\.edu\.ec$/,
+                                                message: "El correo debe ser institucional - @epn.edu.ec"
+                                            }
 
                                         })}
                                     />

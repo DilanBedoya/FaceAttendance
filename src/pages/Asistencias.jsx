@@ -121,7 +121,7 @@ export default function Asistencias() {
         console.log("asistencias", asistencias);
 
         try {
-            
+
 
             const token = localStorage.getItem("token");
             const url = `${import.meta.env.VITE_URL_BACKEND}/asistencia/actualizar`;
@@ -196,11 +196,22 @@ export default function Asistencias() {
     const [showModal, setShowModal] = useState(false);
 
     const handleOpenModal = async () => {
-        // Validación de curso y estudiantes
+        // Validación de curso 
         if (!selectedCourse) {
             await Swal.fire({
                 title: 'Error',
                 text: 'Por favor, selecciona un curso para registrar la asistencia',
+                icon: 'question',
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            });
+            return;
+        }
+
+        if (!filteredStudents || filteredStudents.length === 0) {
+            await Swal.fire({
+                title: 'Error',
+                text: 'No existe registro de estudiantes',
                 icon: 'question',
                 confirmButtonColor: '#d33',
                 confirmButtonText: 'Aceptar'

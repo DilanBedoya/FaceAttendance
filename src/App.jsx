@@ -16,7 +16,6 @@ import Cursos from './pages/Cursos';
 import Reportes from './pages/Reportes';
 import Estudiantes from './pages/Estudiantes';
 import PrivateRoute from './routes/PrivateRoute';
-import RegistroAsitencias from './pages/RegisterPage';
 import Restablecer from './pages/RestablecerPassword';
 import Confirmar from './pages/Confirmar';
 
@@ -43,7 +42,6 @@ function App() {
           <Route path="estudiantes" element={<Estudiantes />} />
           <Route path="cursos" element={<Cursos />} />
           <Route path="asistencias" element={<Asistencias />} />
-          <Route path="registro-asistencias" element={<RegistroAsitencias />} />
           <Route path="actuaciones" element={<Actuaciones />} />
           <Route path="reportes" element={<Reportes />} />
         </Route>
