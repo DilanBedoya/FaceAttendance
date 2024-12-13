@@ -192,7 +192,7 @@ export default function Asistencias() {
     //Reconocimiento Facial
     const videoRef = useRef(null);
     const [capturedImage, setCapturedImage] = useState(null);
-    const [recognitionResult, setRecognitionResult] = useState('');
+  
     const [showModal, setShowModal] = useState(false);
 
     const handleOpenModal = async () => {
@@ -243,23 +243,23 @@ export default function Asistencias() {
         };
     }, [showModal]);
 
-    const [isLoading, setIsLoading] = useState(false); // Para manejar la carga
-    const [recognitionStatus, setRecognitionStatus] = useState(null); // "recognized" o "not_recognized"
+    const [isLoading, setIsLoading] = useState(false);
+    const [recognitionStatus, setRecognitionStatus] = useState(null); 
     const [recognizedName, setRecognizedName] = useState("");
-    const [isCapturing, setIsCapturing] = useState(false); // Estado para controlar la captura automática
-    const timeoutRef = useRef(null); // Referencia para limpiar el timeout
+    const [isCapturing, setIsCapturing] = useState(false); 
+    const timeoutRef = useRef(null); 
     const isCapturingRef = useRef(isCapturing);
     useEffect(() => {
-        // Sincroniza el valor de isCapturing con el ref
+       
         isCapturingRef.current = isCapturing;
     }, [isCapturing]);
 
     const handleStartCapture = () => {
-        setIsCapturing(true); // Cambia explícitamente el estado a false
+        setIsCapturing(true); 
         console.log("Captura iniciada");
     };
     const handleStopCapture = () => {
-        setIsCapturing(false); // Cambia explícitamente el estado a false
+        setIsCapturing(false); 
         console.log("Captura detenida");
     };
 
@@ -528,7 +528,7 @@ export default function Asistencias() {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">Reconocimiento Facial</h5>
-                                <button className="btn-close" onClick={() => setShowModal(false)}></button>
+                                <button disabled={isLoading} className="btn-close" onClick={() => setShowModal(false)}></button>
                             </div>
                             <div className="modal-body d-flex justify-content-center align-items-center flex-column">
                                 <video
