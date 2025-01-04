@@ -27,7 +27,6 @@ export default function Reportes() {
 
             // Llamar a listarEstudiantes con await para esperar la respuesta
             const estudiantesFiltrados = await listarEstudiantes(selectedCourse, formattedDate);
-            console.log(estudiantesFiltrados);
             if (estudiantesFiltrados) {
                 setIsFilteredByDate(true); // Cambiar a vista de búsqueda por fecha solo si la respuesta es válida
                 Swal.fire({
@@ -68,7 +67,6 @@ export default function Reportes() {
             const response = await axios.post(url, data, { headers });
             setDate("")
             setCursos(response.data); // Guardar los cursos en el estado
-            console.log(response.data);
         } catch (error) {
             console.log(error);
         }
@@ -89,7 +87,6 @@ export default function Reportes() {
 
     // Función para listar estudiantes del curso seleccionado
     const [students, setStudents] = useState([]); // Estado para almacenar los estudiantes del curso seleccionado
-    console.log(students);
     const listarEstudiantes = async (curso, formattedDate = "") => {
         try {
             const token = localStorage.getItem("token");
@@ -110,13 +107,11 @@ export default function Reportes() {
                 Authorization: `Bearer ${token}`
             };
 
-            console.log(data);
 
             // Hacer la petición POST al backend para obtener los estudiantes
             const response = await axios.post(url, data, { headers });
             setStudents(response.data); // Guardar los estudiantes en el estado
             // Retornar los datos de estudiantes
-            console.log(response.data);
             return response.data;
         } catch (error) {
             console.log(error);

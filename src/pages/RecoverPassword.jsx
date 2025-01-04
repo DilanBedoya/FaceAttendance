@@ -33,7 +33,6 @@ export default function RecoverPassword() {
                 confirmButtonColor: 'black'
             });
             // Manejar la respuesta
-            console.log('Respuesta exitosa:', response.data);
             //limpiar form
             reset();
 
@@ -87,7 +86,7 @@ export default function RecoverPassword() {
                                             //Validar luego para el correo
 
                                             pattern: {
-                                                value: /^[a-z0-9._%+-]+@epn\.edu\.ec$/,
+                                                value: /^[a-zA-Z0-9._%+-]+@epn\.edu\.ec$/,
                                                 message: "El correo debe ser institucional - @epn.edu.ec"
                                             }
 

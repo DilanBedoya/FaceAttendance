@@ -23,7 +23,7 @@ export default function Confirmar(){
                 confirmButtonColor: 'black'
             });
 
-            console.log("esta es tu respuesta",response)
+         
 
         } catch (error) {
             console.error("Error en la peticion ",error);

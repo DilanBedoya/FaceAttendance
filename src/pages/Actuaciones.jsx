@@ -25,7 +25,7 @@ export default function Actuaciones() {
             // Hacer la petición POST al backend con token
             const response = await axios.post(url, data, { headers });
             setCursos(response.data); // Guardar los cursos en el estado
-            console.log(response.data);
+           
 
         } catch (error) {
             console.log(error);
@@ -45,7 +45,6 @@ export default function Actuaciones() {
 
     // Función para listar estudiantes del curso seleccionado
     const [students, setStudents] = useState([]); // Estado para almacenar los estudiantes del curso seleccionado
-    console.log(students);
     const listarEstudiantes = async (curso) => {
         try {
             const token = localStorage.getItem("token");
@@ -262,6 +261,7 @@ export default function Actuaciones() {
                                             <td style={{ textAlign: "center" }}>
                                                 <Button
                                                     variant="link"
+                                                    title='Reporte actuaciones'
                                                     onClick={() => handleOpenModal(estudiante)}
                                                     style={{ padding: 0, color: 'inherit', marginRight: '10px' }}
                                                 >

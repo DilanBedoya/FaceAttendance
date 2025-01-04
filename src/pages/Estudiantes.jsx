@@ -35,7 +35,6 @@ export default function Estudiantes() {
             // Hacer la petición POST al backend con token
             const response = await axios.post(url, data, { headers });
             setCursos(response.data); // Guardar los cursos en el estado
-            console.log(response.data);
 
         } catch (error) {
             console.log(error);
@@ -65,7 +64,6 @@ export default function Estudiantes() {
             setStudents(response.data); // Guardar los estudiantes en el estado
 
 
-            console.log(response.data);
 
         } catch (error) {
             console.log(error);
@@ -126,7 +124,6 @@ export default function Estudiantes() {
                     confirmButtonText: 'OK',
                     confirmButtonColor: 'black'
                 });
-                console.log(response.data);
                 // Actualizar la lista de estudiantes
                 listarEstudiantes(selectedCourse);
 
@@ -159,8 +156,6 @@ export default function Estudiantes() {
 
             // Hacer la petición POST al backend con token
             const response = await axios.get(url, { headers });
-            // console.log(response.data);
-            console.log(response.data.fotografia);
             setImage(response.data.fotografia)
             handleShowUpdate()
             resetUpdate(response.data)
@@ -207,7 +202,6 @@ export default function Estudiantes() {
 
             // Hacer la petición POST al backend con token
             const response = await axios.put(url, body, { headers });
-            console.log(response.data);
 
             //mostrar alerta correcta
             Swal.fire({
@@ -330,6 +324,7 @@ export default function Estudiantes() {
                                             <td style={{ textAlign: "center" }}>
                                                 <Button
                                                     variant="link"
+                                                    title="Actualizar estudiante"
                                                     onClick={() => visualizarEstudiante(estudiante._id)}
                                                     style={{ padding: 0, color: 'inherit', marginRight: '10px' }}
                                                 >
@@ -338,7 +333,7 @@ export default function Estudiantes() {
                                                 <Button
                                                     variant="link"
                                                     onClick={() => eliminarEstudiante(estudiante._id)}
-                                                    title="Eliminar curso"
+                                                    title="Eliminar estudiante"
                                                     style={{ padding: 0, color: 'inherit' }}
                                                 >
                                                     <RiDeleteBin2Fill />

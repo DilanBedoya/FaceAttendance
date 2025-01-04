@@ -95,7 +95,7 @@ export default function Cursos() {
                 confirmButtonColor: 'black'
             });
             // Manejar la respuesta
-            console.log('Respuesta exitosa:', response.data);
+           
             //limpiar form
             resetCreate();
             //cerrar el modal
@@ -138,7 +138,7 @@ export default function Cursos() {
             // Hacer la petición POST al backend con token
             const response = await axios.post(url, data, { headers });
             setCursos(response.data); // Guardar los cursos en el estado
-            console.log(response.data);
+           
 
         } catch (error) {
             console.log(error);
@@ -189,7 +189,6 @@ export default function Cursos() {
                     confirmButtonText: 'OK',
                     confirmButtonColor: 'black'
                 });
-                console.log(response.data);
                 // Actualizar la lista de cursos en estado local
                 setCursos((prevCursos) => prevCursos.filter(curso => curso._id !== id));
 
@@ -225,7 +224,6 @@ export default function Cursos() {
 
             // Hacer la petición POST al backend con token
             const response = await axios.get(url, { headers });
-            console.log(response.data);
 
             handleShowUpdate()
             resetUpdate(response.data)
@@ -248,7 +246,6 @@ export default function Cursos() {
 
             // Hacer la petición POST al backend con token
             const response = await axios.put(url, data, { headers });
-            console.log(response.data);
 
             //mostrar alerta correcta
             Swal.fire({
@@ -337,6 +334,7 @@ export default function Cursos() {
                                         <td style={{ textAlign: "center" }}>
                                             <Button
                                                 variant="link"
+                                                title="Actualizar curso"
                                                 onClick={() => visualizarCurso(curso._id)}
                                                 style={{ padding: 0, color: 'inherit', marginRight: '10px' }}
                                             >

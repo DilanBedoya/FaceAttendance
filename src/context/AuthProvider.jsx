@@ -22,9 +22,7 @@ const actualizarPerfil = async (datos) => {
             confirmButtonText: 'OK',
             confirmButtonColor: 'black'
         });
-        // Manejar la respuesta
-        console.log('Respuesta exitosa:', response.data);
-        console.log(datos);
+      
 
         return response.data
     } catch (error) {

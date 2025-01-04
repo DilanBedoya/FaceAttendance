@@ -26,7 +26,7 @@ export default function Asistencias() {
             // Hacer la petición POST al backend con token
             const response = await axios.post(url, data, { headers });
             setCursos(response.data); // Guardar los cursos en el estado
-            console.log(response.data);
+           
 
         } catch (error) {
             console.log(error);
@@ -64,7 +64,7 @@ export default function Asistencias() {
             // Hacer la petición Put al backend para obtener los estudiantes
             const response = await axios.post(url, data, { headers });
             setStudents(response.data); // Guardar los estudiantes en el estado
-            console.log(response.data);
+          
 
         } catch (error) {
             console.log(error);
@@ -116,9 +116,7 @@ export default function Asistencias() {
         const formattedDate = `${day}/${month}/${year}`;
 
 
-        console.log("Curso", curso);
-        console.log("Fecha", formattedDate);
-        console.log("asistencias", asistencias);
+   
 
         try {
 
@@ -151,7 +149,7 @@ export default function Asistencias() {
                 confirmButtonText: 'OK',
                 confirmButtonColor: 'black'
             });
-            console.log(response.data);
+          
             setSelectedCourse(null)
         } catch (error) {
             console.log(error);
@@ -167,14 +165,14 @@ export default function Asistencias() {
 
 
     //Funcionalidad para obtener estudiantes
-    console.log(students);
+   
     const [filter, setFilter] = useState(''); // Estado para el filtro de nombre
     // Filtra los estudiantes por el nombre ingresado
     const filteredStudents = students.filter(estudiante =>
         estudiante.estudiante.nombre.toLowerCase().includes(filter.toLowerCase()) ||
         estudiante.estudiante.apellido.toLowerCase().includes(filter.toLowerCase())
     );
-    console.log(filteredStudents);
+
 
 
     //funcionalidad fecha
@@ -256,20 +254,20 @@ export default function Asistencias() {
 
     const handleStartCapture = () => {
         setIsCapturing(true); 
-        console.log("Captura iniciada");
+        
     };
     const handleStopCapture = () => {
         setIsCapturing(false); 
-        console.log("Captura detenida");
+        
     };
 
     const captureImage = () => {
 
         if (!isCapturingRef.current) {
-            console.log("Captura detenida, no se ejecuta");
+            
             return; // Si está detenido, no hace nada
         }
-        console.log('capturando imagen');
+        
         setIsLoading(true); // Inicia el proceso de carga
         setRecognitionStatus(null); // Resetea el estado previo
 
@@ -337,7 +335,7 @@ export default function Asistencias() {
 
             // Verificar si se ha reconocido un rostro
             const recognizedName = response.data.coincidencia; // Suponemos que el backend devuelve el nombre
-            console.log("Coincidencia log:", recognizedName);
+            
 
             if (recognizedName) {
                 // Busca el estudiante en la lista utilizando el nombre reconocido
@@ -373,7 +371,7 @@ export default function Asistencias() {
             [studentId]: value, // Actualiza el valor seleccionado
         }));
     };
-    console.log("Datos de asistencia:", attendance);
+  
 
 
     // Función para encontrar el ID del estudiante a partir del nombre
@@ -391,7 +389,7 @@ export default function Asistencias() {
         // Construye el nombre completo de cada estudiante y lo normaliza para comparar
         const student = students.find(student => {
             const studentFullName = `${student.estudiante.nombre} ${student.estudiante.apellido}`;
-            console.log(studentFullName);
+          
             return normalizeString(studentFullName) === normalizedFullName;
         });
 
@@ -399,7 +397,7 @@ export default function Asistencias() {
     };
 
     useEffect(() => {
-        console.log("UseEffect capturing", isCapturing);
+      
         if (!isCapturing) {
             return; // No hace nada si isCapturing es falso
         }
