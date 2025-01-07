@@ -26,7 +26,7 @@ export default function Asistencias() {
             // Hacer la petición POST al backend con token
             const response = await axios.post(url, data, { headers });
             setCursos(response.data); // Guardar los cursos en el estado
-           
+
 
         } catch (error) {
             console.log(error);
@@ -64,7 +64,7 @@ export default function Asistencias() {
             // Hacer la petición Put al backend para obtener los estudiantes
             const response = await axios.post(url, data, { headers });
             setStudents(response.data); // Guardar los estudiantes en el estado
-          
+
 
         } catch (error) {
             console.log(error);
@@ -116,7 +116,7 @@ export default function Asistencias() {
         const formattedDate = `${day}/${month}/${year}`;
 
 
-   
+
 
         try {
 
@@ -149,7 +149,7 @@ export default function Asistencias() {
                 confirmButtonText: 'OK',
                 confirmButtonColor: 'black'
             });
-          
+
             setSelectedCourse(null)
         } catch (error) {
             console.log(error);
@@ -165,7 +165,7 @@ export default function Asistencias() {
 
 
     //Funcionalidad para obtener estudiantes
-   
+
     const [filter, setFilter] = useState(''); // Estado para el filtro de nombre
     // Filtra los estudiantes por el nombre ingresado
     const filteredStudents = students.filter(estudiante =>
@@ -190,7 +190,7 @@ export default function Asistencias() {
     //Reconocimiento Facial
     const videoRef = useRef(null);
     const [capturedImage, setCapturedImage] = useState(null);
-  
+
     const [showModal, setShowModal] = useState(false);
 
     const handleOpenModal = async () => {
@@ -242,32 +242,31 @@ export default function Asistencias() {
     }, [showModal]);
 
     const [isLoading, setIsLoading] = useState(false);
-    const [recognitionStatus, setRecognitionStatus] = useState(null); 
+    const [recognitionStatus, setRecognitionStatus] = useState(null);
     const [recognizedName, setRecognizedName] = useState("");
-    const [isCapturing, setIsCapturing] = useState(false); 
-    const timeoutRef = useRef(null); 
+    const [isCapturing, setIsCapturing] = useState(false);
+    const timeoutRef = useRef(null);
     const isCapturingRef = useRef(isCapturing);
     useEffect(() => {
-       
         isCapturingRef.current = isCapturing;
     }, [isCapturing]);
 
     const handleStartCapture = () => {
-        setIsCapturing(true); 
-        
+        setIsCapturing(true);
+
     };
     const handleStopCapture = () => {
-        setIsCapturing(false); 
-        
+        setRecognitionStatus(null)
+        setIsCapturing(false);
     };
 
     const captureImage = () => {
 
         if (!isCapturingRef.current) {
-            
+
             return; // Si está detenido, no hace nada
         }
-        
+
         setIsLoading(true); // Inicia el proceso de carga
         setRecognitionStatus(null); // Resetea el estado previo
 
@@ -287,19 +286,19 @@ export default function Asistencias() {
                 // Configura el próximo disparo 3 segundos después de obtener la respuesta
                 timeoutRef.current = setTimeout(() => {
                     captureImage();
-                }, 3000);
+                }, 6000);
             }).catch(() => {
                 setIsLoading(false);
 
                 // Asegura reintentar después de 3 segundos incluso en caso de error
                 timeoutRef.current = setTimeout(() => {
                     captureImage();
-                }, 3000);
+                }, 6000);
             });
         }, 'image/jpeg');
     };
 
-    // Limpia el timeout cuando se detiene la captura o el componente se desmonta
+    // Limpia el timeout cuando se detiene la captura 
     useEffect(() => {
         if (!isCapturing && timeoutRef.current) {
             clearTimeout(timeoutRef.current);
@@ -334,8 +333,8 @@ export default function Asistencias() {
             });
 
             // Verificar si se ha reconocido un rostro
-            const recognizedName = response.data.coincidencia; // Suponemos que el backend devuelve el nombre
-            
+            const recognizedName = response.data.coincidencia;
+
 
             if (recognizedName) {
                 // Busca el estudiante en la lista utilizando el nombre reconocido
@@ -345,16 +344,14 @@ export default function Asistencias() {
                     setRecognitionStatus("recognized"); // Si se reconoce al estudiante, se actualiza el estado
                     setRecognizedName(recognizedName); // Muestra el nombre del estudiante reconocido
                     handleAttendanceChange(studentId, 'presente'); // Cambia el estado de asistencia del estudiante
-                } else {
-                    console.warn('Estudiante no encontrado:', recognizedName);
-                    setRecognitionStatus("not_recognized"); // Si no se encuentra el estudiante en la lista
                 }
-            } else {
-                setRecognitionStatus("not_recognized"); // Si no hay coincidencia
             }
         } catch (error) {
             console.error('Error en el reconocimiento facial:', error);
-            setRecognitionStatus("error"); // Si ocurre un error durante la petición
+            setRecognitionStatus("error");
+            setTimeout(() => {
+                setRecognitionStatus(null);
+            }, 6000);
         } finally {
             setIsLoading(false); // Detiene el spinner de carga
         }
@@ -371,7 +368,7 @@ export default function Asistencias() {
             [studentId]: value, // Actualiza el valor seleccionado
         }));
     };
-  
+
 
 
     // Función para encontrar el ID del estudiante a partir del nombre
@@ -389,7 +386,7 @@ export default function Asistencias() {
         // Construye el nombre completo de cada estudiante y lo normaliza para comparar
         const student = students.find(student => {
             const studentFullName = `${student.estudiante.nombre} ${student.estudiante.apellido}`;
-          
+
             return normalizeString(studentFullName) === normalizedFullName;
         });
 
@@ -397,13 +394,29 @@ export default function Asistencias() {
     };
 
     useEffect(() => {
-      
         if (!isCapturing) {
-            return; // No hace nada si isCapturing es falso
+            return; 
         }
+        captureImage(); 
+    }, [isCapturing]); 
 
-        captureImage(); // Llama al primer reconocimiento inmediatamente
-    }, [isCapturing]); // Escucha cambios en isCapturing
+    const [counter, setCounter] = useState(6);
+
+    // Efecto para manejar el contador
+    useEffect(() => {
+        // console.log("Recognition status:", recognitionStatus);
+        // console.log("Counter:", counter);
+
+        if (recognitionStatus === "recognized" && counter > 0) {
+            const timer = setTimeout(() => setCounter(counter - 1), 1000);
+            return () => clearTimeout(timer);
+        } else if (recognitionStatus === "error") {
+            const timer = setTimeout(() => setCounter(counter - 1), 1000);
+            return () => clearTimeout(timer);
+        } else {
+            setCounter(6);
+        }
+    }, [counter, recognitionStatus]);
 
     return (
         <Container>
@@ -554,17 +567,16 @@ export default function Asistencias() {
                                         <p>¡Rostro reconocido con éxito!</p>
                                         <p><strong>{recognizedName}</strong></p>
                                         <p>Estado: Presente</p>
-                                    </div>
-                                ) : recognitionStatus === "not_recognized" ? (
-                                    <div style={{ color: "red", textAlign: "center" }}>
-                                        <p>No se pudo reconocer el rostro.</p>
+                                        <p>Continuando en {counter}...</p>
                                     </div>
                                 ) : recognitionStatus === "error" ? (
                                     <div style={{ color: "red", textAlign: "center" }}>
                                         <p>Rostro no reconocido</p>
+                                        <p>Continuando en {counter}...</p>
                                     </div>
                                 ) : (
                                     <p>Esperando rostro...</p>
+
                                 )}
 
                             </div>
@@ -581,12 +593,13 @@ export default function Asistencias() {
                                     <button
                                         className="btn btn-danger"
                                         onClick={() => handleStopCapture()} // Detener la captura automática
+                                        disabled={isLoading}
                                     >
                                         Detener
                                     </button>
                                 )}
 
-                                <button disabled={isLoading} className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                                <button disabled={isLoading || isCapturing} className="btn btn-secondary" onClick={() => setShowModal(false)}>
                                     Cerrar
                                 </button>
                             </div>
